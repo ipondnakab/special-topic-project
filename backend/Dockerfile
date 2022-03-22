@@ -1,6 +1,17 @@
-FROM node:14
-WORKDIR /backend
-COPY package.json .
-RUN npm install
+FROM node:14 as base
+
+WORKDIR /home/node/app
+
+COPY package.json ./
+
+RUN npm i
+
 COPY . .
-CMD npm start
+
+FROM base as production
+
+ENV NODE_PATH=./build
+
+RUN npm run build
+
+CMD npm run start
