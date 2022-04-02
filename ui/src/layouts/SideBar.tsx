@@ -8,9 +8,9 @@ const MockupIcon = styled.div`
   width: 80%;
   border-radius: 4px;
   margin: 8px auto;
-  background-color: #0000006a;
+  background-color: #f2f2f2;
   display: flex;
-  color: #fff;
+  color: #555;
   justify-content: center;
   align-items: center;
 `;

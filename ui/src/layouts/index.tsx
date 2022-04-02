@@ -14,7 +14,7 @@ const Screen = styled.div`
 
 const AppContainer = styled.div`
   flex: 1;
-  background-color: #f9f9f9;
+  background-color: #f2f2f2;
   display: flex;
   flex-direction: column;
   overflow-y: auto;

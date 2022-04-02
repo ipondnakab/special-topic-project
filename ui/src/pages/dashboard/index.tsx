@@ -9,7 +9,6 @@ const Dashboard: React.FC = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:3080/user/");
-
       setTest(res.data);
     };
     fetchData();
