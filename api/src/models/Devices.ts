@@ -24,18 +24,22 @@ const Devices = sequelize.define(
     statusRelay1: {
       type: Sequelize.BOOLEAN,
       field: "status_relay_1",
+      defaultValue: false,
     },
     statusRelay2: {
       type: Sequelize.BOOLEAN,
       field: "status_relay_2",
+      defaultValue: false,
     },
     statusRelay3: {
       type: Sequelize.BOOLEAN,
       field: "status_relay_3",
+      defaultValue: false,
     },
     statusRelay4: {
       type: Sequelize.BOOLEAN,
       field: "status_relay_4",
+      defaultValue: false,
     },
   },
   {

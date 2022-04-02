@@ -20,7 +20,7 @@ route.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const devices = await Devices.findAll({
-      Where: {
+      where: {
         deviceId: id,
       },
     });
@@ -32,14 +32,17 @@ route.get("/:id", async (req, res) => {
   }
 });
 
-route.patch("/update", async (req, res) => {
-  const { firstName, lastName } = req.body;
+route.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
   try {
-    const devices = await Devices.update({
-      firstName: firstName || "John",
-      lastName: lastName || "Hancock",
+    const device = await Devices.update(data, {
+      where: {
+        deviceId: id,
+      },
     });
-    res.json(devices);
+    res.json(device);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -47,26 +50,10 @@ route.patch("/update", async (req, res) => {
   }
 });
 
-route.post("/create", async (req, res) => {
-  const {
-    name,
-    ipAddress,
-    wifiName,
-    statusRelay1,
-    statusRelay2,
-    statusRelay3,
-    statusRelay4,
-  } = req.body;
+route.post("/", async (req, res) => {
+  const data = req.body;
   try {
-    const device = await Devices.create({
-      name: name,
-      ipAddress: ipAddress,
-      wifiName: wifiName,
-      statusRelay1: statusRelay1,
-      statusRelay2: statusRelay2,
-      statusRelay3: statusRelay3,
-      statusRelay4: statusRelay4,
-    });
+    const device = await Devices.create(data);
     res.json(device);
   } catch (error) {
     res.status(500).json({
@@ -78,8 +65,8 @@ route.post("/create", async (req, res) => {
 route.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const device = await Devices.delete({
-      Where: {
+    const device = await Devices.destroy({
+      where: {
         deviceId: id,
       },
     });

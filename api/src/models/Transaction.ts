@@ -2,11 +2,12 @@ import sequelize from "../database";
 import * as Sequelize from "sequelize";
 
 export const tableName = "devices";
+
 const Devices = sequelize.define(
   tableName,
   {
     deviceId: {
-      type: Sequelize.UUID,
+      type: Sequelize.NUMBER,
       field: "device_id",
     },
     temperature: {

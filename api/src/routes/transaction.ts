@@ -19,7 +19,7 @@ route.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const transactions = await Transaction.findAll({
-      Where: {
+      where: {
         deviceId: id,
       },
     });
