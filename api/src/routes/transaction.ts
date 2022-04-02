@@ -1,4 +1,3 @@
-import { Where } from "./../../node_modules/sequelize/types/utils.d";
 import * as express from "express";
 import { Transactions } from "../database";
 
@@ -9,7 +8,7 @@ route.get("/", async (_, res) => {
     const transactions = await Transactions.findAll();
     res.json(transactions);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -25,7 +24,7 @@ route.get("/:id", async (req, res) => {
     });
     res.json(transactions);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -40,7 +39,7 @@ route.post("/create", async (req, res) => {
     });
     res.json(transaction);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }

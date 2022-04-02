@@ -30,8 +30,6 @@ Transactions.sync({ force: true })
   .then(() => Transactions.bulkCreate(mockupTransactions)) //Mockup data
   .catch((error) => console.log({ error }));
 
-export default sequelize;
+export const connection = async () => sequelize.authenticate();
 
-export const connection = async () => {
-  sequelize.authenticate();
-};
+export default sequelize;

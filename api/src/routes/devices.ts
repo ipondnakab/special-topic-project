@@ -1,5 +1,3 @@
-import { Where } from "./../../node_modules/sequelize/types/utils.d";
-import { Update } from "./../../../ui/node_modules/history/index.d";
 import * as express from "express";
 import { Devices } from "../database";
 
@@ -12,7 +10,7 @@ route.get("/", async (_, res) => {
     });
     res.json(devices);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -28,7 +26,7 @@ route.get("/:id", async (req, res) => {
     });
     res.json(devices);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -50,7 +48,7 @@ route.patch("/:id", async (req, res) => {
     });
     res.json(device);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -62,7 +60,7 @@ route.post("/", async (req, res) => {
     const device = await Devices.create(data);
     res.json(device);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -78,7 +76,7 @@ route.delete("/delete/:id", async (req, res) => {
     });
     res.json(device);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
