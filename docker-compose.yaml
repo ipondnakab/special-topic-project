@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  # Database
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    container_name: postgres
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: root
+    networks:
+      - mean-stack-net
+    volumes:
+      - postgres:/data/db
+  # Backend server
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3080:3080
+    container_name: mean-api
+    networks:
+      - mean-stack-net
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: root
+      POSTGRES_HOST: db
+    volumes:
+      - ./api/src:/usr/app/src
+    depends_on:
+      - db
+  # Frontend server
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+    container_name: mean-ui
+    networks:
+      - mean-stack-net
+    volumes:
+      - ./ui/src:/usr/app/src
+      - ./ui/public:/usr/app/public
+    depends_on:
+      - api
+    stdin_open: true
+    tty: true
+
+networks:
+  mean-stack-net:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
