@@ -1,4 +1,7 @@
 import * as Sequelize from "sequelize";
+import models from "./models";
+import mockupDevices from "./migrations/devices";
+import mockupTransactions from "./migrations/transactions";
 
 const sequelize = new Sequelize.Sequelize(
   process.env.POSTGRES_DB || "database",
@@ -14,6 +17,18 @@ const sequelize = new Sequelize.Sequelize(
     },
   }
 );
+
+// Initialize models
+export const Devices = models.Devices(sequelize);
+export const Transactions = models.Transactions(sequelize);
+
+// Sync all models that have been defined above to the database.
+Devices.sync({ force: true })
+  .then(() => Devices.bulkCreate(mockupDevices)) //Mockup data
+  .catch((error) => console.log({ error }));
+Transactions.sync({ force: true })
+  .then(() => Transactions.bulkCreate(mockupTransactions)) //Mockup data
+  .catch((error) => console.log({ error }));
 
 export default sequelize;
 

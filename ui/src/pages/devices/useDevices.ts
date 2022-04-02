@@ -1,5 +1,5 @@
 import React from "react";
-import { createDevice, getDevices } from "../../apis/devices";
+import { createDevice, getDevices, updateDevice } from "../../apis/devices";
 import { Device } from "../../interfaces/devices";
 
 export const deviceContext = React.createContext<ReturnType<typeof useDevices>>(
@@ -11,24 +11,24 @@ export const useDevicesContext = () => React.useContext(deviceContext);
 function useDevices() {
   const [devices, setDevices] = React.useState<Device[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [tapSelect, setTapSelect] = React.useState<string>();
+  const getAllDevices = React.useCallback(async () => {
+    try {
+      const response = await getDevices();
+      if (!response) return;
+      setDevices(response);
+    } catch (error) {
+      console.log({ error });
+    }
+  }, []);
 
   React.useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      try {
-        const response = await getDevices();
-        if (!response) return;
-        setTapSelect(response[0].id.toString() || "");
-        setDevices(response);
-      } catch (error) {
-        console.log({ error });
-      } finally {
-        setIsLoading(false);
-      }
+      await getAllDevices();
+      setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [getAllDevices]);
 
   const onCreateDevice = async (
     data: Pick<Device, "name" | "ipAddress" | "wifiName" | "wifiPassword">
@@ -41,14 +41,31 @@ function useDevices() {
     }
   };
 
+  const onChangeStatusRelay = async (
+    id: string,
+    relay: "statusRelay1" | "statusRelay2" | "statusRelay3" | "statusRelay4",
+    status: boolean
+  ) => {
+    try {
+      const device = devices.find(
+        (device) => device.id.toString() === id.toString()
+      );
+      if (!device) return;
+      await updateDevice(id, { [relay]: status });
+      // await setTimeout(() => {}, 1000);
+      await getAllDevices();
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   return {
     devices,
-    tapSelect,
-    setTapSelect,
     setDevices,
     onCreateDevice,
     setIsLoading,
     isLoading,
+    onChangeStatusRelay,
   };
 }
 

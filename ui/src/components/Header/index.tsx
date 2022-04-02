@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { FlexCol, FlexRow } from "../common";
 
 export type HeaderProps = {
   title: React.ReactNode;
@@ -21,13 +22,7 @@ const HeaderContainer = styled.div`
     color: #8c8c8c;
   }
 `;
-const FlexRow = styled.div`
-  display: flex;
-`;
-const FlexCol = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+
 const Header: React.FC<HeaderProps> = ({
   title,
   extraLeft,

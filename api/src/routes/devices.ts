@@ -1,13 +1,15 @@
 import { Where } from "./../../node_modules/sequelize/types/utils.d";
 import { Update } from "./../../../ui/node_modules/history/index.d";
 import * as express from "express";
-import Devices from "../models/Devices";
+import { Devices } from "../database";
 
 const route = express.Router();
 
 route.get("/", async (_, res) => {
   try {
-    const devices = await Devices.findAll();
+    const devices = await Devices.findAll({
+      order: [["id", "ASC"]],
+    });
     res.json(devices);
   } catch (error) {
     res.status(500).json({
@@ -21,7 +23,7 @@ route.get("/:id", async (req, res) => {
   try {
     const devices = await Devices.findAll({
       where: {
-        deviceId: id,
+        id,
       },
     });
     res.json(devices);
@@ -34,12 +36,16 @@ route.get("/:id", async (req, res) => {
 
 route.patch("/:id", async (req, res) => {
   const { id } = req.params;
-  const data = req.body;
+  const data = req.body as { [key: string]: any };
+  Object.keys(data).forEach(
+    (key) => data[key] === undefined && delete data[key]
+  );
+  console.log({ data, id });
 
   try {
     const device = await Devices.update(data, {
       where: {
-        deviceId: id,
+        id: Number(id),
       },
     });
     res.json(device);
@@ -67,7 +73,7 @@ route.delete("/delete/:id", async (req, res) => {
   try {
     const device = await Devices.destroy({
       where: {
-        deviceId: id,
+        id,
       },
     });
     res.json(device);

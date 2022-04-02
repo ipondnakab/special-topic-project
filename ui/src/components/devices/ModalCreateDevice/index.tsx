@@ -107,6 +107,7 @@ const ModalCreateDevice: React.FC<ModalProps> = ({
         <ContentInput>
           {inputs.map((item) => (
             <Input
+              key={item.name}
               icon={item.icon}
               label={item.label}
               labelAlignment="left"

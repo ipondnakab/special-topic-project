@@ -15,5 +15,5 @@ COPY . .
 
 EXPOSE 3080
 
-# Run the React app
+# Run the Server
 CMD ["npm", "run", "dev"]
