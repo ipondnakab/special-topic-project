@@ -6,13 +6,13 @@ services:
     image: postgres
     ports:
       - 5432:5432
-    container_name: postgres
+    container_name: database
     environment:
       POSTGRES_DB: database
       POSTGRES_USER: user
       POSTGRES_PASSWORD: root
     networks:
-      - mean-stack-net
+      - backend_network
     volumes:
       - postgres:/data/db
   # Backend server
@@ -22,9 +22,10 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - 3080:3080
-    container_name: mean-api
+    container_name: api
     networks:
-      - mean-stack-net
+      - backend_network
+      - frontend_network
     environment:
       POSTGRES_DB: database
       POSTGRES_USER: user
@@ -41,9 +42,9 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
-    container_name: mean-ui
+    container_name: ui
     networks:
-      - mean-stack-net
+      - frontend_network
     volumes:
       - ./ui/src:/usr/app/src
       - ./ui/public:/usr/app/public
@@ -53,7 +54,9 @@ services:
     tty: true
 
 networks:
-  mean-stack-net:
+  backend_network:
+    driver: bridge
+  frontend_network:
     driver: bridge
 
 volumes:

@@ -9,17 +9,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "ENVIRONMENT=$ENVIRONMENT webpack"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bbachi/nodejs-restapi-mongo-ts.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bbachi/nodejs-restapi-mongo-ts/issues"
-  },
-  "homepage": "https://github.com/bbachi/nodejs-restapi-mongo-ts#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
