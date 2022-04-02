@@ -1,5 +1,6 @@
 import sequelize from "../database";
 import * as Sequelize from "sequelize";
+import mockup from "../migrations/devices";
 
 export const tableName = "devices";
 const Devices = sequelize.define(
@@ -46,6 +47,10 @@ const Devices = sequelize.define(
     freezeTableName: true,
   }
 );
-Devices.sync({ force: true });
+Devices.sync({ force: true }).then(async () => {
+  for (const iterator of mockup) {
+    await Devices.create(iterator);
+  }
+});
 
 export default Devices;

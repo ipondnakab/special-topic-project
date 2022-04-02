@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { RegisterOptions, useForm } from "react-hook-form";
 import { Button, Input, Modal, Spinner } from "react-rainbow-components";
 import { ModalProps } from "react-rainbow-components/components/Modal";
 import Header from "../../Header";
@@ -25,6 +25,45 @@ type DeviceForm = Pick<
   Device,
   "name" | "ipAddress" | "wifiName" | "wifiPassword"
 >;
+
+const inputs: {
+  label: string;
+  icon: JSX.Element;
+  placeholder: string;
+  name: keyof DeviceForm;
+  rules: RegisterOptions;
+  type?: "text" | "password";
+}[] = [
+  {
+    label: "ชื่ออุปกรณ์",
+    icon: <BiDevices />,
+    placeholder: "ชื่ออุปกรณ์...",
+    name: "name",
+    rules: { required: "กรุณากรอกชื่ออุปกรณ์" },
+  },
+  {
+    label: "IP Address",
+    icon: <HiOutlineLocationMarker />,
+    placeholder: "IP Address...",
+    name: "ipAddress",
+    rules: { required: "กรุณากรอก IP Address" },
+  },
+  {
+    label: "ชื่อ Wifi",
+    icon: <BiWifi />,
+    placeholder: "ชื่อ Wifi...",
+    name: "wifiName",
+    rules: { required: "กรุณากรอกชื่อ Wifi" },
+  },
+  {
+    label: "รหัส Wifi",
+    icon: <BiKey />,
+    placeholder: "รหัส Wifi",
+    name: "wifiPassword",
+    rules: { required: "กรุณากรอกรหัส Wifi" },
+    type: "password",
+  },
+];
 
 const ModalCreateDevice: React.FC<ModalProps> = ({
   isOpen,
@@ -60,48 +99,24 @@ const ModalCreateDevice: React.FC<ModalProps> = ({
       setIsLoading(false);
     }
   };
+
   return (
-    <Modal id="modal-1" isOpen={isOpen} onRequestClose={onRequestClose}>
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Header extraLeft={<IoIosAdd size={28} />} title={"เพิ่มอุปกรณ์"} />
         <ContentInput>
-          <Input
-            icon={<BiDevices />}
-            label="ชื่ออุปกรณ์"
-            labelAlignment="left"
-            placeholder="ชื่ออุปกรณ์"
-            error={errors["name"]?.message}
-            {...register("name", { required: "กรุณากรอกชื่ออุปกรณ์" })}
-            onChange={(e) => setValue("name", e.target.value)}
-          />
-          <Input
-            icon={<HiOutlineLocationMarker />}
-            label="IP Address"
-            labelAlignment="left"
-            placeholder="IP Address"
-            error={errors["ipAddress"]?.message}
-            {...register("ipAddress", { required: "กรุณากรอก IP Address" })}
-            onChange={(e) => setValue("ipAddress", e.target.value)}
-          />
-          <Input
-            icon={<BiWifi />}
-            label="ชื่อ Wifi"
-            labelAlignment="left"
-            placeholder="ชื่อ Wifi"
-            error={errors["wifiName"]?.message}
-            {...register("wifiName", { required: "กรุณากรอกชื่อ Wifi" })}
-            onChange={(e) => setValue("wifiName", e.target.value)}
-          />
-          <Input
-            icon={<BiKey />}
-            label="รหัส Wifi"
-            labelAlignment="left"
-            placeholder="รหัส Wifi"
-            type="password"
-            error={errors["wifiPassword"]?.message}
-            {...register("wifiPassword", { required: "กรุณากรอกรหัส Wifi" })}
-            onChange={(e) => setValue("wifiPassword", e.target.value)}
-          />
+          {inputs.map((item) => (
+            <Input
+              icon={item.icon}
+              label={item.label}
+              labelAlignment="left"
+              placeholder={item.placeholder}
+              type={item.type}
+              error={errors[item.name]?.message}
+              {...register(item.name, item.rules)}
+              onChange={(e) => setValue(item.name, e.target.value)}
+            />
+          ))}
         </ContentInput>
         <Button
           type="submit"

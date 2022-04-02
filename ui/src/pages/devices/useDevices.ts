@@ -10,14 +10,22 @@ export const useDevicesContext = () => React.useContext(deviceContext);
 
 function useDevices() {
   const [devices, setDevices] = React.useState<Device[]>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [tapSelect, setTapSelect] = React.useState<string>();
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const response = await getDevices();
-      if (!response) return;
-      setTapSelect(response[0].id.toString() || "");
-      setDevices(response);
+      setIsLoading(true);
+      try {
+        const response = await getDevices();
+        if (!response) return;
+        setTapSelect(response[0].id.toString() || "");
+        setDevices(response);
+      } catch (error) {
+        console.log({ error });
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -29,7 +37,7 @@ function useDevices() {
       const res = await createDevice(data);
       if (res) setDevices((oldVal) => [...oldVal, res]);
     } catch (error) {
-      console.log(error);
+      console.log({ error });
     }
   };
 
@@ -39,6 +47,8 @@ function useDevices() {
     setTapSelect,
     setDevices,
     onCreateDevice,
+    setIsLoading,
+    isLoading,
   };
 }
 

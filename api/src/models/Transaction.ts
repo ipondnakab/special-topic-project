@@ -1,9 +1,10 @@
 import sequelize from "../database";
 import * as Sequelize from "sequelize";
+import mockup from "../migrations/transactions";
 
-export const tableName = "devices";
+export const tableName = "transactions";
 
-const Devices = sequelize.define(
+const Transaction = sequelize.define(
   tableName,
   {
     deviceId: {
@@ -26,15 +27,17 @@ const Devices = sequelize.define(
       type: Sequelize.NUMBER,
       field: "wind_speed",
     },
-    timestamp: {
-      type: Sequelize.NUMBER,
-      field: "timestamp",
-    },
   },
   {
     freezeTableName: true,
   }
 );
-Devices.sync({ force: true });
 
-export default Devices;
+Transaction.sync({ force: true }).then(async () => {
+  for (const iterator of mockup) {
+    console.log({ iterator });
+    await Transaction.create(iterator);
+  }
+});
+
+export default Transaction;
