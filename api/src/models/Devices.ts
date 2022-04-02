@@ -9,7 +9,7 @@ const Devices = sequelize.define(
       type: Sequelize.STRING,
       field: "name",
     },
-    ipAdress: {
+    ipAddress: {
       type: Sequelize.STRING,
       field: "ip_address",
     },
@@ -19,7 +19,7 @@ const Devices = sequelize.define(
     },
     wifiPassword: {
       type: Sequelize.STRING,
-      field: "wifi_name",
+      field: "wifi_password",
     },
     statusRelay1: {
       type: Sequelize.BOOLEAN,
