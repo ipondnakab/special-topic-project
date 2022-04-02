@@ -1,12 +1,12 @@
 import * as express from "express";
-import User from "../models/User";
+import Devices from "../models/Devices";
 
 const route = express.Router();
 
 route.get("/", async (_, res) => {
   try {
-    const users = await User.findAll();
-    res.json(users);
+    const devices = await Devices.findAll();
+    res.json(devices);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -17,16 +17,17 @@ route.get("/", async (_, res) => {
 route.post("/create", async (req, res) => {
   const { firstName, lastName } = req.query;
   try {
-    const user = await User.create({
+    const device = await Devices.create({
       firstName: firstName || "John",
       lastName: lastName || "Hancock",
     });
-    res.json(user);
+    res.json(device);
   } catch (error) {
     res.status(500).json({
       message: error.message,
     });
   }
 });
+
 
 export default route;
