@@ -33,6 +33,14 @@ const mockDevices = [
     windSpeed: 24.32,
     timestamp: dayjs().subtract(2, "hour").toDate(),
   },
+  {
+    deviceId: 2,
+    temperature: 28.50,
+    moisture: 14.20,
+    soilMoisture: 30.22,
+    windSpeed: 30.32,
+    timestamp: dayjs().subtract(1, "hour").toDate(),
+  },
 ];
 
 export default mockDevices;
