@@ -38,8 +38,6 @@ route.patch("/:id", async (req, res) => {
   Object.keys(data).forEach(
     (key) => data[key] === undefined && delete data[key]
   );
-  console.log({ data, id });
-
   try {
     const device = await Devices.update(data, {
       where: {

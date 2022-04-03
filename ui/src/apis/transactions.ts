@@ -8,16 +8,15 @@ export const getAllByDevicesId = async (id: string) => {
     const response = await axios.get<Transaction[]>(`${pathUrl}/${id}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 };
-
 
 export const getLatestByDevicesId = async (id: string) => {
   try {
     const response = await axios.get<Transaction>(`${pathUrl}/${id}/latest`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 };

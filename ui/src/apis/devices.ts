@@ -8,7 +8,7 @@ export const getDevices = async () => {
     const response = await axios.get<Device[]>(pathUrl);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 };
 
@@ -17,7 +17,7 @@ export const getDeviceById = async (id: string) => {
     const response = await axios.get<Device>(`${pathUrl}/${id}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 };
 
@@ -26,7 +26,7 @@ export const updateDevice = async (id: string, data: Partial<Device>) => {
     const response = await axios.patch<Device>(`${pathUrl}/${id}`, data);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 };
 
@@ -37,16 +37,15 @@ export const createDevice = async (
     const response = await axios.post<Device>(pathUrl, data);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 };
-
 
 export const deleteDevite = async (id: string) => {
   try {
     const response = await axios.delete(`${pathUrl}/${id}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
-}
+};

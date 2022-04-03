@@ -94,7 +94,7 @@ const ModalCreateDevice: React.FC<ModalProps> = ({
       reset();
       onRequestClose && onRequestClose();
     } catch (error) {
-      console.log(error);
+      console.log({ error });
     } finally {
       setIsLoading(false);
     }

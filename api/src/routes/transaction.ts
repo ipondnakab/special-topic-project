@@ -24,8 +24,6 @@ route.get("/:id/latest", async (req, res) => {
       order: [["id", "DESC"]],
       limit: 1,
     });
-    console.log(transactions);
-
     if (!transactions.length) return res.json(null);
     res.json(transactions[0]);
   } catch (error) {
