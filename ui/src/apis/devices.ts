@@ -40,3 +40,13 @@ export const createDevice = async (
     console.log(error);
   }
 };
+
+
+export const deleteDevite = async (id: string) => {
+  try {
+    const response = await axios.delete(`${pathUrl}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}

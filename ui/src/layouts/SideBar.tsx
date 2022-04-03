@@ -15,7 +15,8 @@ const MockupIcon = styled.div`
   align-items: center;
 `;
 const SideBar: React.FC = () => {
-  const [selectedItem, setSelectItem] = React.useState("dashboard");
+  const pathName = window.location.pathname.slice(1);
+  const [selectedItem, setSelectItem] = React.useState(pathName || "dashboard");
   const navigate = useNavigate();
   React.useEffect(
     () => navigate("/" + selectedItem),

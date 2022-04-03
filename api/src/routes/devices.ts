@@ -66,7 +66,7 @@ route.post("/", async (req, res) => {
   }
 });
 
-route.delete("/delete/:id", async (req, res) => {
+route.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const device = await Devices.destroy({

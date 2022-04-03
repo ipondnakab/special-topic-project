@@ -7,7 +7,7 @@ const mockDevices = [
     moisture: 24.52,
     soilMoisture: 60.24,
     windSpeed: 20.34,
-    timestamp: dayjs().subtract(3, "hour").toDate(),
+    timestamp: dayjs().subtract(5, "hour").toDate(),
   },
   {
     deviceId: 1,
@@ -15,7 +15,7 @@ const mockDevices = [
     moisture: 17.23,
     soilMoisture: 45.94,
     windSpeed: 12.34,
-    timestamp: dayjs().subtract(2, "hour").toDate(),
+    timestamp: dayjs().subtract(4, "hour").toDate(),
   },
   {
     deviceId: 1,
@@ -23,7 +23,7 @@ const mockDevices = [
     moisture: 11.23,
     soilMoisture: 30.04,
     windSpeed: 32.34,
-    timestamp: dayjs().subtract(1, "hour").toDate(),
+    timestamp: dayjs().subtract(3, "hour").toDate(),
   },
   {
     deviceId: 1,
@@ -31,7 +31,7 @@ const mockDevices = [
     moisture: 15.23,
     soilMoisture: 24.44,
     windSpeed: 24.32,
-    timestamp: dayjs().subtract(0, "hour").toDate(),
+    timestamp: dayjs().subtract(2, "hour").toDate(),
   },
 ];
 

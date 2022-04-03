@@ -25,6 +25,7 @@ export const DetailDeviceContainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  margin: 0 8px;
   @media (max-width: 768px) {
     flex-direction: column;
     overflow: auto;
@@ -43,19 +44,11 @@ export const DetailContent = styled.div`
     justify-content: center;
     padding-top: 0px;
   }
-
   & > h1 {
     font-size: 20px;
     color: #333;
     margin-top: 8px;
     margin-left: 8px;
-  }
-  & > p {
-    font-size: 16px;
-  }
-  & > svg {
-    float: left;
-    margin-right: 4px;
   }
 `;
 
@@ -64,9 +57,9 @@ export const RelayContent = styled.div`
   min-width: 460px;
   flex: 1;
   width: 100%;
-  margin: 8px;
+  margin: 4px 8px;
   padding: 16px 24px;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #fff;
   justify-content: space-between;
 
@@ -83,10 +76,66 @@ export const RelayContent = styled.div`
     justify-content: center;
     align-items: center;
     &:not(:last-child) {
-      border-right: solid 1px #666;
+      border-right: solid 4px #f2f2f2;
       @media (max-width: 768px) {
         border-right: none;
       }
     }
+  }
+`;
+
+export const TransactionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+`;
+
+export const CardTransaction = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 200px;
+  padding: 18px 32px;
+  border-radius: 8px;
+  margin: 0 8px;
+  margin-bottom: 8px;
+  color: #fff;
+  min-height: 120px;
+
+  & > h1 {
+    font-size: 32px;
+    color: #fff;
+    text-align: right;
+    min-height: 32px;
+  }
+`;
+
+export const LabelIcon = styled.div`
+  display: flex;
+  flex-direction: row;
+  & > svg {
+    float: left;
+    margin-right: 4px;
+  }
+  & > p {
+    font-size: 16px;
+  }
+`;
+
+export const EmptyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  font-size: 32px;
+  color: #ddd;
+  & * {
+    opacity: 0.6;
   }
 `;

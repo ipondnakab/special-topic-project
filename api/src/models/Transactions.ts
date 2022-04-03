@@ -37,6 +37,10 @@ const Transaction = (sequelize: Sequelize.Sequelize) =>
         type: Sequelize.DOUBLE,
         field: "wind_speed",
       },
+      timestamp: {
+        type: Sequelize.DATE,
+        field: "timestamp",
+      },
     },
     {
       freezeTableName: true,

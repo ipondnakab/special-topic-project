@@ -13,3 +13,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.swal2-backdrop-show {
+  backdrop-filter: blur(5px);
+  background-color: rgba(239, 241, 245, 0.64) !important;
+}
+
+.swal2-popup {
+  border-radius: 14px !important;
+}
+
+button.swal2-styled {
+  border-radius: 999px !important;
+  min-width: 100px;
+}
+
+.swal2-actions {
+  flex-direction: row-reverse;
+}
