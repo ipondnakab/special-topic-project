@@ -1,14 +1,11 @@
-import React from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import { RegisterOptions, useForm } from "react-hook-form";
 import { Button, Input, Modal, Spinner } from "react-rainbow-components";
-import { ModalProps } from "react-rainbow-components/components/Modal";
 import Header from "../../Header";
-import { IoIosAdd } from "react-icons/io";
 import { BiDevices, BiKey, BiWifi } from "react-icons/bi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import styled from "styled-components";
 import { Device } from "../../../interfaces/devices";
-import { useDevicesContext } from "../../../pages/devices/useDevices";
 const ContentInput = styled.div`
   padding: 1.5rem 1rem;
   & > div {
@@ -23,7 +20,7 @@ const Form = styled.form`
 
 type DeviceForm = Pick<
   Device,
-  "name" | "ipAddress" | "wifiName" | "wifiPassword"
+  "id" | "name" | "ipAddress" | "wifiName" | "wifiPassword"
 >;
 
 const inputs: {
@@ -65,9 +62,22 @@ const inputs: {
   },
 ];
 
-const ModalCreateDevice: React.FC<ModalProps> = ({
+export type ModalPropsType = {
+  isOpen?: boolean;
+  onRequestClose?: () => void;
+  actionSubmit: (data: Pick<Device, any>) => Promise<void>;
+  value?: DeviceForm;
+  titleModal: string;
+  iconModal: ReactElement<any, any>;
+};
+
+const ModalCreateDevice: React.FC<ModalPropsType> = ({
   isOpen,
   onRequestClose,
+  actionSubmit,
+  value,
+  titleModal,
+  iconModal,
 }) => {
   const {
     register,
@@ -76,21 +86,20 @@ const ModalCreateDevice: React.FC<ModalProps> = ({
     setValue,
     reset,
   } = useForm<DeviceForm>({
-    defaultValues: {
-      name: "",
-      ipAddress: "",
-      wifiName: "",
-      wifiPassword: "",
-    },
+    defaultValues: useMemo(() => {
+      return value;
+    }, [value]),
   });
 
-  const { onCreateDevice } = useDevicesContext();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const onSubmit = async (data: DeviceForm) => {
     setIsLoading(true);
     try {
-      await onCreateDevice(data);
+      if (value?.id) {
+        data.id = value.id;
+      }
+      await actionSubmit(data);
       reset();
       onRequestClose && onRequestClose();
     } catch (error) {
@@ -100,10 +109,14 @@ const ModalCreateDevice: React.FC<ModalProps> = ({
     }
   };
 
+  useEffect(() => {
+    reset(value);
+  }, [reset, value]);
+
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Header extraLeft={<IoIosAdd size={28} />} title={"เพิ่มอุปกรณ์"} />
+        <Header extraLeft={iconModal} title={titleModal} />
         <ContentInput>
           {inputs.map((item) => (
             <Input
@@ -125,7 +138,7 @@ const ModalCreateDevice: React.FC<ModalProps> = ({
           style={{ margin: "0 auto", width: 240 }}
           disabled={isLoading}
         >
-          <> {isLoading && <Spinner size="small" />}สร้าง</>
+          <> {isLoading && <Spinner size="small" />}บันทึก</>
         </Button>
       </Form>
     </Modal>
