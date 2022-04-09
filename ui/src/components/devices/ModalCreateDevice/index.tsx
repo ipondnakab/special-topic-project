@@ -85,6 +85,7 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
     handleSubmit,
     setValue,
     reset,
+    watch,
   } = useForm<DeviceForm>({
     defaultValues: useMemo(() => {
       return value;
@@ -110,8 +111,13 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
   };
 
   useEffect(() => {
-    reset(value);
-  }, [reset, value]);
+    if (value) {
+      setValue("name", value.name);
+      setValue("ipAddress", value.ipAddress);
+      setValue("wifiName", value.wifiName);
+      setValue("wifiPassword", value.wifiPassword);
+    }
+  }, [setValue, value]);
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
@@ -129,6 +135,8 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
               error={errors[item.name]?.message}
               {...register(item.name, item.rules)}
               onChange={(e) => setValue(item.name, e.target.value)}
+              // value={value?.[item.name]}
+              value={watch(item.name)}
             />
           ))}
         </ContentInput>
