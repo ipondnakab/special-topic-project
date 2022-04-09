@@ -4,7 +4,7 @@ import { Button, Spinner } from "react-rainbow-components";
 import { Device } from "../../../interfaces/devices";
 import { Schedule, ScheduleType } from "../../../interfaces/schedule";
 import Header from "../../Header";
-import { CardSchedule, IconContainer, Label } from "./index.style";
+import { CardSchedule, Container, ContentContainer, IconContainer, Label } from "./index.style";
 import { transactionList } from "../index.config";
 export type ScheduleContentPropsType = {
   device: Device;
@@ -89,14 +89,7 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
   return loading ? (
     <Spinner />
   ) : (
-    <div
-      style={{
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        overflow: "scroll",
-      }}
-    >
+    <Container>
       <Header
         title={"การทำงานอัตโนมัติ"}
         extraRight={
@@ -112,7 +105,7 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
           </Button>
         }
       />
-      <div style={{ flex: 1, overflow: "scroll" }}>
+      <ContentContainer>
         {schedule !== "loading" &&
           schedule.map((item) => {
             const isWeekly = item.type === ScheduleType.WEEKLY;
@@ -151,8 +144,8 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
               </CardSchedule>
             );
           })}
-      </div>
-    </div>
+      </ContentContainer>
+    </Container>
   );
 };
 
