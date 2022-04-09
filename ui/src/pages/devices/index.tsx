@@ -12,7 +12,8 @@ import {
 } from "react-rainbow-components";
 import Header from "../../components/Header";
 import { IoIosAdd } from "react-icons/io";
-import ModalCreateDevice from "../../components/devices/ModalCreateDevice";
+import ModalDevice from "../../components/devices/ModalDevice";
+import ModalSchedule from "../../components/devices/ModalSchedule";
 import useDevices, { deviceContext } from "./useDevices";
 import { FlexCol } from "../../components/common";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -244,20 +245,28 @@ const Devices: React.FC = () => {
   return (
     <deviceContext.Provider value={customHookDevices}>
       <>
-        <ModalCreateDevice
+        <ModalDevice
           isOpen={showModalCreate}
           onRequestClose={() => setShowModalCreate(false)}
           actionSubmit={onCreateDevice}
           titleModal="เพิ่มอุปกรณ์"
           iconModal={<IoIosAdd size={28} />}
         />
-        <ModalCreateDevice
+        <ModalDevice
           isOpen={showModalEdit}
           onRequestClose={() => setShowModalEdit(false)}
           actionSubmit={onEditDevice}
           value={currentEditDevice}
           titleModal="แก้ไขข้อมูลอุปกรณ์"
           iconModal={<FaPencilAlt size={24} />}
+        />
+        <ModalSchedule
+          isOpen={true}
+          onRequestClose={() => {}}
+          // actionSubmit={() => {}}
+          // value={currentEditDevice}
+          titleModal="เพิ่ม Schedule"
+          iconModal={<IoIosAdd size={24} />}
         />
         <Header
           title={"อุปกรณ์"}
