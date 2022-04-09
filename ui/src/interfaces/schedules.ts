@@ -1,10 +1,6 @@
-export enum ScheduleType {
-    WEEKLY = "WEEKLY",
-    SENSOR = "SENSOR",
-  }
 export type Schedule = {
   id: number;
-  type: ScheduleType;
+  type: string;
   condition: string;
   value: string;
   period: string;

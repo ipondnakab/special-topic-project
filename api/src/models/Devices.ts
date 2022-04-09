@@ -1,12 +1,22 @@
 import * as Sequelize from "sequelize";
 
 export const tableName = "devices";
+
+export enum DeviceMode {
+  AUTO = "AUTO",
+  MANUAL = "MANUAL",
+}
 export interface DevicesInterface extends Sequelize.Model {
   id: number;
   name: string;
   ipAddress: string;
   wifiName: string;
   wifiPassword: string;
+  mode: DeviceMode;
+  statusRelay1: boolean;
+  statusRelay2: boolean;
+  statusRelay3: boolean;
+  statusRelay4: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -30,6 +40,11 @@ const Devices = (sequelize: Sequelize.Sequelize) =>
       wifiPassword: {
         type: Sequelize.STRING,
         field: "wifi_password",
+      },
+      mode: {
+        type: Sequelize.ENUM("AUTO", "MANUAL"),
+        field: "mode",
+        defaultValue: "MANUAL",
       },
       statusRelay1: {
         type: Sequelize.BOOLEAN,

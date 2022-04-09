@@ -56,7 +56,7 @@ export type ModalPropsType = {
 
 const ModalSchedule: React.FC<ModalPropsType> = ({
   isOpen,
-  deviceId: id,
+  deviceId,
   onRequestClose,
   actionSubmit,
   value,
