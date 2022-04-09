@@ -1,12 +1,20 @@
 import * as Sequelize from "sequelize";
 
-export const tableName = "cchedule";
+export const tableName = "schedule";
+
+export enum ScheduleType {
+  WEEKLY = "WEEKLY",
+  CENSOR = "CENSOR",
+}
+
 export interface ScheduleInterface extends Sequelize.Model {
   id: number;
-  name: string;
-  ipAddress: string;
-  wifiName: string;
-  wifiPassword: string;
+  type: string;
+  condition: string;
+  value: string;
+  period: string;
+  activeRelay: number[];
+  deviceId: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -16,7 +24,7 @@ const Schedule = (sequelize: Sequelize.Sequelize) =>
     tableName,
     {
       type: {
-        type: Sequelize.ENUM("weekly", "censor"),
+        type: Sequelize.ENUM(ScheduleType.WEEKLY, ScheduleType.CENSOR),
         field: "type",
       },
       condition: {
