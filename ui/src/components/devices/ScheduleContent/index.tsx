@@ -6,6 +6,7 @@ import { Schedule, ScheduleType } from "../../../interfaces/schedule";
 import Header from "../../Header";
 import { CardSchedule, IconContainer, Label } from "./index.style";
 import { transactionList } from "../index.config";
+import { getSchedule, getScheduleByDeviceId } from "../../../apis/schedules";
 export type ScheduleContentPropsType = {
   device: Device;
 };
@@ -22,70 +23,29 @@ const dayToThai: { [key: string]: string } = {
 
 const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
   const [loading, setLoading] = React.useState(false);
-  const [schedule] = React.useState<Schedule[] | "loading">([
-    {
-      id: 1,
-      type: ScheduleType.WEEKLY,
-      condition: "sunday",
-      value: "10:00",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 2,
-      type: ScheduleType.SENSOR,
-      condition: "temperature",
-      value: "28",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 3,
-      type: ScheduleType.WEEKLY,
-      condition: "sunday",
-      value: "10:00",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 4,
-      type: ScheduleType.SENSOR,
-      condition: "temperature",
-      value: "28",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 5,
-      type: ScheduleType.WEEKLY,
-      condition: "sunday",
-      value: "10:00",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 6,
-      type: ScheduleType.SENSOR,
-      condition: "temperature",
-      value: "28",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-  ]);
+  const [schedule, setSchedle] = React.useState<Schedule[]>([  ]);
 
-  React.useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      setLoading(false);
-    };
-    fetch();
-  }, [device]);
+  // const getScheduleById = React.useCallback(async () => {
+  //   try {
+  //     const response = await getSchedule();
+  //     if (!response) return;
+  //     // setSchedle(response);
+  //     console.log(response);
+      
+  //   } catch (error) {
+  //     console.log({ error });
+  //   }
+  // }, []);
+
+  // React.useEffect(() => {
+  //   const fetch = async () => {
+  //     setLoading(true);
+  //     await getScheduleById();
+  //     setLoading(false);
+  //   };
+  //   fetch();
+  // }, [device, getScheduleById]);
+
   return loading ? (
     <Spinner />
   ) : (
@@ -107,13 +67,13 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
                   marginRight: 8,
                 }}
               />
-              เงือนไข
+              เพิ่มเงื่อนไข
             </>
           </Button>
         }
       />
       <div style={{ flex: 1, overflow: "scroll" }}>
-        {schedule !== "loading" &&
+        {!loading &&
           schedule.map((item) => {
             const isWeekly = item.type === ScheduleType.WEEKLY;
             const sensorDetail = transactionList.find(

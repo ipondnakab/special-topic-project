@@ -14,18 +14,16 @@ import DeviceContent from "../../components/devices/DeviceContent";
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
   const [showModalEdit, setShowModalEdit] = React.useState(false);
-  const [showModalCreateSchedule, setShowModalCreateSchedule] = React.useState(false);
-  const [showModalEditSchedule, setShowModalEditSchedule] = React.useState(false);
+  const [showModalCreateSchedule, setShowModalCreateSchedule] =
+    React.useState(false);
+  const [showModalEditSchedule, setShowModalEditSchedule] =
+    React.useState(false);
   const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
   const [tapSelect, setTapSelect] = React.useState<string>();
 
   const customHookDevices = useDevices();
-  const {
-    devices,
-    isLoading,
-    onCreateDevice,
-    onEditDevice,
-  } = customHookDevices;
+  const { devices, isLoading, onCreateDevice, onEditDevice } =
+    customHookDevices;
 
   React.useEffect(() => {
     if (devices.length > 0 && !tapSelect)
@@ -113,7 +111,7 @@ const Devices: React.FC = () => {
                     (device) =>
                       device.id.toString() === tapSelect && (
                         <DeviceContent
-                          key={device.id}
+                          key={device.id + device.name}
                           device={device}
                           openEditModal={openEditModal}
                           tapSelect={tapSelect}
