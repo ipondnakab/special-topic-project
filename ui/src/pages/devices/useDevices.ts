@@ -48,17 +48,26 @@ function useDevices() {
   };
 
   const onEditDevice = async (
-    data: Pick<Device, "id" | "name" | "ipAddress" | "wifiName" | "wifiPassword">
+    data: Partial<
+      Pick<
+        Device,
+        "id" | "name" | "ipAddress" | "wifiName" | "wifiPassword" | "mode"
+      >
+    >
   ) => {
+    setIsLoading(true);
     try {
-      const device = devices.find(
-        (device) => device.id.toString() === data.id.toString()
+      if (!data.id) return;
+      const device = devices.find((d) =>
+        data.id ? d.id.toString() === data.id.toString() : false
       );
       if (!device) return;
       await updateDevice(data.id, data);
       await getAllDevices();
     } catch (error) {
       console.log({ error });
+    } finally {
+      setIsLoading(false);
     }
   };
 

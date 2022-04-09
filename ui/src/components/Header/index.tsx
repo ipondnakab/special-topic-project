@@ -7,13 +7,16 @@ export type HeaderProps = {
   subTitle?: React.ReactNode;
   extraLeft?: React.ReactNode;
   extraRight?: React.ReactNode;
+  fontSize?: string;
+  hideLine?: boolean;
 };
 const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: solid 2px #e6e6e6;
+  border-bottom: ${({ hideLine }: { hideLine?: boolean }) =>
+    hideLine ? "nune" : "solid 2px #e6e6e6"};
   & h2 {
     font-size: 24px;
   }
@@ -28,13 +31,19 @@ const Header: React.FC<HeaderProps> = ({
   extraLeft,
   extraRight,
   subTitle,
+  fontSize,
+  hideLine,
 }) => {
   return (
-    <HeaderContainer>
+    <HeaderContainer hideLine={hideLine}>
       <FlexRow>
         {extraLeft}
         <FlexCol>
-          {typeof title === "string" ? <h2>{title}</h2> : title}
+          {typeof title === "string" ? (
+            <h2 style={{ fontSize }}>{title}</h2>
+          ) : (
+            title
+          )}
           <span className="subtitle">{subTitle}</span>
         </FlexCol>
       </FlexRow>
