@@ -4,7 +4,7 @@ export const tableName = "schedule";
 
 export enum ScheduleType {
   WEEKLY = "WEEKLY",
-  CENSOR = "CENSOR",
+  SENSOR = "SENSOR",
 }
 
 export interface ScheduleInterface extends Sequelize.Model {
@@ -24,7 +24,7 @@ const Schedule = (sequelize: Sequelize.Sequelize) =>
     tableName,
     {
       type: {
-        type: Sequelize.ENUM(ScheduleType.WEEKLY, ScheduleType.CENSOR),
+        type: Sequelize.ENUM(ScheduleType.WEEKLY, ScheduleType.SENSOR),
         field: "type",
       },
       condition: {
