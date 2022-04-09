@@ -19,6 +19,11 @@ const AppContainer = styled.div`
   flex-direction: column;
   overflow-y: auto;
   padding: 32px;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
 `;
 
 const Layouts: React.FC = ({ children }) => {
