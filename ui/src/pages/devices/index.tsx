@@ -105,6 +105,8 @@ const transactionList: {
 
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
+  const [showModalEdit, setShowModalEdit] = React.useState(false);
+  const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
   const [tapSelect, setTapSelect] = React.useState<string>();
   const [latestTransaction, setLatestTransaction] = React.useState<
     Transaction | undefined | "loading"
@@ -153,7 +155,7 @@ const Devices: React.FC = () => {
   );
 
   const customHookDevices = useDevices();
-  const { devices, isLoading, onChangeStatusRelay, onDeleteDevice } =
+  const { devices, isLoading, onChangeStatusRelay, onDeleteDevice, onCreateDevice, onEditDevice } =
     customHookDevices;
 
   React.useEffect(() => {
@@ -177,12 +179,28 @@ const Devices: React.FC = () => {
     fetch();
   }, [tapSelect]);
 
+  const openEditModal = (data: Device) => {
+    setCurrentEditDevice(data)
+    setShowModalEdit(true)
+  };
+
   return (
     <deviceContext.Provider value={customHookDevices}>
       <>
         <ModalCreateDevice
           isOpen={showModalCreate}
           onRequestClose={() => setShowModalCreate(false)}
+          actionSubmit={onCreateDevice}
+          titleModal="เพิ่มอุปกรณ์"
+          iconModal={<IoIosAdd size={28} />}
+        />
+        <ModalCreateDevice
+          isOpen={showModalEdit}
+          onRequestClose={() => setShowModalEdit(false)}
+          actionSubmit={onEditDevice}
+          value={currentEditDevice}
+          titleModal="แก้ไขข้อมูลอุปกรณ์"
+          iconModal={<FaPencilAlt size={24} />}
         />
         <Header
           title={"อุปกรณ์"}
@@ -233,6 +251,7 @@ const Devices: React.FC = () => {
                                   variant="base"
                                   size="medium"
                                   tooltip="แก้ไข"
+                                  onClick={() => openEditModal(item)}
                                   icon={<FaPencilAlt />}
                                 />
                                 <ButtonIcon

@@ -47,6 +47,21 @@ function useDevices() {
     }
   };
 
+  const onEditDevice = async (
+    data: Pick<Device, "id" | "name" | "ipAddress" | "wifiName" | "wifiPassword">
+  ) => {
+    try {
+      const device = devices.find(
+        (device) => device.id.toString() === data.id.toString()
+      );
+      if (!device) return;
+      await updateDevice(data.id, data);
+      await getAllDevices();
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   const onChangeStatusRelay = async (
     id: string,
     relay: "statusRelay1" | "statusRelay2" | "statusRelay3" | "statusRelay4",
@@ -91,6 +106,7 @@ function useDevices() {
     devices,
     setDevices,
     onCreateDevice,
+    onEditDevice,
     setIsLoading,
     isLoading,
     onChangeStatusRelay,
