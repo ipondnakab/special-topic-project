@@ -7,6 +7,8 @@ import {
   Spinner,
   Tab,
   Tabset,
+  Chart,
+  Dataset,
 } from "react-rainbow-components";
 import Header from "../../components/Header";
 import { IoIosAdd } from "react-icons/io";
@@ -33,10 +35,15 @@ import {
   RelayContent,
   TabsContainer,
   TransactionContainer,
+  DetailDeviceContainerGraph,
+  ChartHeading,
 } from "./index.style";
 import { Device } from "../../interfaces/devices";
 import { Transaction } from "../../interfaces/transaction";
-import { getLatestByDevicesId } from "../../apis/transactions";
+import {
+  getAllByDevicesId,
+  getLatestByDevicesId,
+} from "../../apis/transactions";
 import dayjs from "dayjs";
 import "dayjs/locale/th"; // import locale
 import { FcBrokenLink } from "react-icons/fc";
@@ -72,6 +79,7 @@ const transactionList: {
   >;
   unit: string;
   bg: string;
+  chartColors: string;
 }[] = [
   {
     icon: <TiWeatherPartlySunny size={32} />,
@@ -79,6 +87,7 @@ const transactionList: {
     name: "temperature",
     unit: "°C",
     bg: "linear-gradient(160deg, #FBAB7E 0%, #F7CE68 100%)",
+    chartColors: "#FBAB7E",
   },
   {
     icon: <TiWeatherShower size={32} />,
@@ -86,6 +95,7 @@ const transactionList: {
     name: "moisture",
     unit: "%",
     bg: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)",
+    chartColors: "#0093E9",
   },
   {
     icon: <TiWeatherDownpour size={32} />,
@@ -93,6 +103,7 @@ const transactionList: {
     name: "soilMoisture",
     unit: "%",
     bg: "linear-gradient(160deg, #2ec0a2 0%,#fde47e 100%)",
+    chartColors: "#2ec0a2",
   },
   {
     icon: <TiWeatherWindyCloudy size={32} />,
@@ -100,8 +111,13 @@ const transactionList: {
     name: "windSpeed",
     unit: "m/s",
     bg: "linear-gradient(160deg, #D9AFD9 0%, #97D9E1 100%)",
+    chartColors: "#D9AFD9",
   },
 ];
+
+const containerStyles = {
+  maxWidth: "100%",
+};
 
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
@@ -110,6 +126,9 @@ const Devices: React.FC = () => {
   const [tapSelect, setTapSelect] = React.useState<string>();
   const [latestTransaction, setLatestTransaction] = React.useState<
     Transaction | undefined | "loading"
+  >();
+  const [allTransaction, setAllTransaction] = React.useState<
+    Transaction[] | undefined | "loading"
   >();
   const [loadingRelay1, setLoadingRelay1] = React.useState(false);
   const [loadingRelay3, setLoadingRelay3] = React.useState(false);
@@ -155,8 +174,14 @@ const Devices: React.FC = () => {
   );
 
   const customHookDevices = useDevices();
-  const { devices, isLoading, onChangeStatusRelay, onDeleteDevice, onCreateDevice, onEditDevice } =
-    customHookDevices;
+  const {
+    devices,
+    isLoading,
+    onChangeStatusRelay,
+    onDeleteDevice,
+    onCreateDevice,
+    onEditDevice,
+  } = customHookDevices;
 
   React.useEffect(() => {
     if (devices.length > 0 && !tapSelect)
@@ -179,9 +204,41 @@ const Devices: React.FC = () => {
     fetch();
   }, [tapSelect]);
 
+  React.useEffect(() => {
+    const fetch = async () => {
+      setAllTransaction("loading");
+      try {
+        if (!tapSelect) return;
+        const res = await getAllByDevicesId(tapSelect);
+        if (!res) return setAllTransaction(undefined);
+        setAllTransaction(res);
+      } catch (error) {
+        setAllTransaction(undefined);
+        console.log({ error });
+      }
+    };
+    fetch();
+  }, [tapSelect]);
+
+  const getArrayChartData = (
+    allTransaction: Transaction[] | undefined | "loading",
+    key: "temperature" | "moisture" | "soilMoisture" | "windSpeed"
+  ) => {
+    if (allTransaction === undefined || allTransaction === "loading") return [];
+    return allTransaction.map((item) => item[key]) as number[];
+  };
+
+  const getArrayChartLabel = (
+    allTransaction: Transaction[] | undefined | "loading"
+  ) => {
+    if (allTransaction === undefined || allTransaction === "loading") return [];
+    return allTransaction.map((item) =>
+      dayjs(item.timestamp).format("HH:mm DD/MM/YYYY")
+    );
+  };
   const openEditModal = (data: Device) => {
-    setCurrentEditDevice(data)
-    setShowModalEdit(true)
+    setCurrentEditDevice(data);
+    setShowModalEdit(true);
   };
 
   return (
@@ -355,6 +412,37 @@ const Devices: React.FC = () => {
                                 ))}
                               </RelayContent>
                             </DetailDeviceContainer>
+
+                            <DetailDeviceContainerGraph>
+                              <ChartHeading className="rainbow-align-content_space-between rainbow-flex rainbow-m-bottom_large">
+                                <div className="rainbow-m-bottom_medium">
+                                  <h2>Transaction</h2>
+                                </div>
+                              </ChartHeading>
+                              <div
+                                className="rainbow-p-vertical_large rainbow-m_auto"
+                                style={containerStyles}
+                              >
+                                <div className="rainbow-align-content_center">
+                                  <Chart
+                                    labels={getArrayChartLabel(allTransaction)}
+                                    type="bar"
+                                    className="rainbow-m-horizontal_xx-large rainbow-m-top_x-large"
+                                  >
+                                    {transactionList.map((chart) => (
+                                      <Dataset
+                                        title={chart.label}
+                                        values={getArrayChartData(
+                                          allTransaction,
+                                          chart.name
+                                        )}
+                                        backgroundColor={chart.chartColors}
+                                      />
+                                    ))}
+                                  </Chart>
+                                </div>
+                              </div>
+                            </DetailDeviceContainerGraph>
                           </ContentTabContainer>
                         </FlexCol>
                       )

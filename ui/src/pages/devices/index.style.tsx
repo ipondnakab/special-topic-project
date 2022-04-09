@@ -139,3 +139,30 @@ export const EmptyContainer = styled.div`
     opacity: 0.6;
   }
 `;
+
+export const ChartHeading = styled.div`
+  padding-left: 7px;
+  padding-right: 7px;
+  font-size: 24px;
+  @media (max-width: 991px) {
+    flex-direction: column;
+    :nth-child(1) {
+      text-align: center;
+    }
+  }
+`;
+
+export const DetailDeviceContainerGraph = styled.div`
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f2f2f2;
+  flex: 1;
+  display: block;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 16px 8px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    overflow: auto;
+  }
+`;
