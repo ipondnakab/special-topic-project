@@ -7,199 +7,48 @@ import {
   Spinner,
   Select,
   TimePicker,
+  ButtonGroupPicker,
+  ButtonOption,
+  RadioGroup,
 } from "react-rainbow-components";
 import Header from "../../Header";
 import { GiSandsOfTime } from "react-icons/gi";
-import { BiTimeFive } from "react-icons/bi";
-import { MdSensors } from "react-icons/md";
 import { FaTemperatureHigh } from "react-icons/fa";
-import styled from "styled-components";
 import { Schedule, ScheduleType } from "../../../interfaces/schedule";
-const ContentInput = styled.div`
-  padding: 1.5rem 1rem;
-  & > div {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
+import { ContentInput, Form } from "./index.style";
 
 type ScheduleForm = Pick<
   Schedule,
   "id" | "type" | "condition" | "value" | "period" | "activeRelay" | "deviceId"
 >;
 
-const inputsType: {
-  label: string;
-  icon: JSX.Element;
-  placeholder: string;
-  name: keyof ScheduleForm;
-  rules: RegisterOptions;
-  type?: "radio";
-  value?: string;
-}[] = [
-  {
-    label: "รายสัปดาห์",
-    icon: <></>,
-    placeholder: "",
-    name: "type",
-    rules: { required: "กรุณาเลือกประเภท Schedule" },
-    type: "radio",
-    value: ScheduleType.WEEKLY,
-  },
-  {
-    label: "Sensor",
-    icon: <></>,
-    placeholder: "",
-    name: "type",
-    rules: { required: "กรุณาเลือกประเภท Schedule" },
-    type: "radio",
-    value: ScheduleType.SENSOR,
-  },
-];
-
-const inputsWeekly: {
-  label: string;
-  icon: JSX.Element;
-  placeholder: string;
-  name: keyof ScheduleForm;
-  rules: RegisterOptions;
-  type?: "text" | "checkbox" | "number";
-  value?: string;
-}[] = [
-  {
-    label: "ตั้งเวลาการเปิด Relay (นาที)",
-    icon: <GiSandsOfTime />,
-    placeholder: "ตั้งเวลา...",
-    name: "period",
-    rules: { required: "กรุณากรอกเวลาสำหรับการเปิด Relay" },
-    type: "number",
-  },
-  {
-    label: "สวิตซ์ 1",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "1",
-  },
-  {
-    label: "สวิตซ์ 2",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "2",
-  },
-  {
-    label: "สวิตซ์ 3",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "3",
-  },
-  {
-    label: "สวิตซ์ 4",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "4",
-  },
-];
-
-const inputsSensor: {
-  label: string;
-  icon: JSX.Element;
-  placeholder: string;
-  name: keyof ScheduleForm;
-  rules: RegisterOptions;
-  type?: "text" | "checkbox" | "number";
-  value?: string;
-}[] = [
-  {
-    label: "ชื่อ Sensor",
-    icon: <MdSensors />,
-    placeholder: "ชื่อ Sensor...",
-    name: "condition",
-    rules: { required: "กรุณากรอกชื่อ Sensor" },
-  },
-  {
-    label: "อุณหภูมิ (เซลเซียส)",
-    icon: <FaTemperatureHigh />,
-    placeholder: "อุณหภูมิ (เซลเซียส)...",
-    name: "value",
-    rules: { required: "กรุณากรอกอุณหภูมิ (เซลเซียส)" },
-    type: "number",
-  },
-  {
-    label: "ตั้งเวลาการเปิด Relay (นาที)",
-    icon: <GiSandsOfTime />,
-    placeholder: "ตั้งเวลา...",
-    name: "period",
-    rules: { required: "กรุณากรอกเวลาสำหรับการเปิด Relay" },
-    type: "number",
-  },
-  {
-    label: "สวิตซ์ 1",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "1",
-  },
-  {
-    label: "สวิตซ์ 2",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "2",
-  },
-  {
-    label: "สวิตซ์ 3",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "3",
-  },
-  {
-    label: "สวิตซ์ 4",
-    icon: <></>,
-    placeholder: "",
-    name: "activeRelay",
-    rules: { required: "กรุณาเลือก Relay ที่ต้องการเปิด" },
-    type: "checkbox",
-    value: "4",
-  },
+const optionsType = [
+  { value: ScheduleType.WEEKLY, label: "รายสัปดาห์" },
+  { value: ScheduleType.SENSOR, label: "Sensor" },
 ];
 
 const optionsDay = [
-  { value: "monday", label: "monday" },
-  { value: "tuesday", label: "tuesday" },
-  { value: "wednesday", label: "wednesday" },
-  { value: "thursday", label: "thursday" },
-  { value: "friday", label: "friday" },
-  { value: "satueday", label: "satueday" },
-  { value: "sunday", label: "sunday" },
+  { value: "monday", label: "จันทร์" },
+  { value: "tuesday", label: "อังคาร" },
+  { value: "wednesday", label: "พุธ" },
+  { value: "thursday", label: "พฤหัสบดี" },
+  { value: "friday", label: "ศุกร์" },
+  { value: "satueday", label: "เสาร์" },
+  { value: "sunday", label: "อาทิตย์" },
+];
+
+const optionsSensor = [
+  { value: "temperature", label: "อุณหภูมิ" },
+  { value: "moisture", label: "ความชื้น" },
+  { value: "soilMoisture", label: "ความชื้นของดิน" },
+  { value: "windSpeed", label: "ความเร็วลม" },
 ];
 
 export type ModalPropsType = {
   isOpen?: boolean;
+  deviceId: number;
   onRequestClose?: () => void;
-  // actionSubmit: (data: Pick<Schedule, any>) => Promise<void>;
+  actionSubmit: () => void;
   value?: ScheduleForm;
   titleModal: string;
   iconModal: ReactElement<any, any>;
@@ -207,8 +56,9 @@ export type ModalPropsType = {
 
 const ModalSchedule: React.FC<ModalPropsType> = ({
   isOpen,
+  deviceId: id,
   onRequestClose,
-  // actionSubmit,
+  actionSubmit,
   value,
   titleModal,
   iconModal,
@@ -255,32 +105,23 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
       setValue("period", value.period);
       setValue("activeRelay", value.activeRelay);
     }
-  }, [setValue, value]);
+  }, [scheduleType, setValue, value]);
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Header extraLeft={iconModal} title={titleModal} />
         <ContentInput>
-          {inputsType.map((item) => (
-            <Input
-              key={item.name + item.value}
-              icon={item.icon}
-              label={item.label}
-              labelAlignment="left"
-              placeholder={item.placeholder}
-              type={item.type}
-              {...register(item.name, item.rules)}
-              onChange={(e) => {
-                console.log(value);
-                if (item.value) {
-                  setValue(item.name, item.value);
-                  setScheduleType(item.value as ScheduleType);
-                }
-              }}
-              // value={watch(item.name)}
-            />
-          ))}
+          <div>
+          <RadioGroup
+            options={optionsType}
+            value={scheduleType}
+            onChange={(e) => {
+              setValue("type", e.target.value as ScheduleType);
+              setScheduleType(e.target.value as ScheduleType);
+            }}
+            label="กรุณาเลือกประเภท Schedule"
+          /></div>
           {scheduleType === ScheduleType.WEEKLY && (
             <>
               <Select
@@ -298,41 +139,69 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
                 okLabel={"ตกลง"}
                 cancelLabel={"ยกเลิก"}
                 value={"10:22"}
+                className={"time-picker"}
                 labelAlignment="left"
                 onChange={(value) => setValue("value", value.toString())}
                 hour24
               />
-              {inputsWeekly.map((item) => (
-                <Input
-                  key={item.name}
-                  icon={item.icon}
-                  label={item.label}
-                  labelAlignment="left"
-                  placeholder={item.placeholder}
-                  type={item.type}
-                  // error={errors[item.name]?.message}
-                  {...register(item.name, item.rules)}
-                  onChange={(e) => setValue(item.name, e.target.value)}
-                  // value={watch(item.name)}
-                />
-              ))}
             </>
           )}
-          {scheduleType === ScheduleType.SENSOR &&
-            inputsSensor.map((item) => (
-              <Input
-                key={item.name}
-                icon={item.icon}
-                label={item.label}
+          {scheduleType === ScheduleType.SENSOR && (
+            <>
+              <Select
+                key={"condition"}
+                label={"ชื่อ Sensor"}
                 labelAlignment="left"
-                placeholder={item.placeholder}
-                type={item.type}
                 // error={errors[item.name]?.message}
-                {...register(item.name, item.rules)}
-                onChange={(e) => setValue(item.name, e.target.value)}
+                {...register("condition", { required: "กรุณาเลือก Sensor" })}
+                onChange={(e) => setValue("condition", e.target.value)}
+                options={optionsSensor}
                 // value={watch(item.name)}
               />
-            ))}
+              <Input
+                key={"value"}
+                icon={<FaTemperatureHigh />}
+                label={"อุณหภูมิ (เซลเซียส)"}
+                labelAlignment="left"
+                placeholder={"อุณหภูมิ (เซลเซียส)..."}
+                type={"number"}
+                // error={errors[item.name]?.message}
+                {...register("value", {
+                  required: "กรุณากรอกอุณหภูมิ (เซลเซียส)",
+                })}
+                onChange={(e) => setValue("value", e.target.value)}
+                // value={watch(item.name)}
+              />
+            </>
+          )}
+          <Input
+            key={"period"}
+            icon={<GiSandsOfTime />}
+            label={"ตั้งเวลาการเปิด Relay (นาที)"}
+            labelAlignment="left"
+            placeholder={"ตั้งเวลา..."}
+            type={"number"}
+            // error={errors[item.name]?.message}
+            {...register("period", {
+              required: "กรุณากรอกเวลาสำหรับการเปิด Relay",
+            })}
+            onChange={(e) => setValue("period", e.target.value)}
+            // value={watch(item.name)}
+          />
+          <ButtonGroupPicker
+            id="button-group-picker-component-3"
+            // className="rainbow-m-around_medium"
+            // value={watch(item.name)}
+            // onChange={(value) => setValue("activeRelay", value)}
+            value={["1", "3"]}
+            name="activeRelay"
+            multiple
+          >
+            <ButtonOption label={"สวิตซ์ 1"} name="1" />
+            <ButtonOption label={"สวิตซ์ 2"} name="2" />
+            <ButtonOption label={"สวิตซ์ 3"} name="3" />
+            <ButtonOption label={"สวิตซ์ 4"} name="4" />
+          </ButtonGroupPicker>
         </ContentInput>
         <Button
           type="submit"

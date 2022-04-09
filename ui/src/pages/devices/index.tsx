@@ -48,6 +48,7 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/th"; // import locale
 import { FcBrokenLink } from "react-icons/fc";
+import { Schedule, ScheduleType } from "../../interfaces/schedule";
 
 const detailList: {
   icon: React.ReactNode;
@@ -120,9 +121,21 @@ const containerStyles = {
   maxWidth: "100%",
 };
 
+const mockSchedule: Schedule = {
+  id: 1,
+  type: ScheduleType.WEEKLY,
+  condition: "tuesday",
+  value: "18:00",
+  period: "20",
+  activeRelay: [2,3],
+  deviceId: 1,
+};
+
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
   const [showModalEdit, setShowModalEdit] = React.useState(false);
+  const [showModalCreateScedule, setShowModalCreateScedule] = React.useState(false);
+  const [showModalEditScedule, setShowModalEditScedule] = React.useState(false);
   const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
   const [tapSelect, setTapSelect] = React.useState<string>();
   const [latestTransaction, setLatestTransaction] = React.useState<
@@ -262,11 +275,20 @@ const Devices: React.FC = () => {
         />
         <ModalSchedule
           isOpen={true}
-          onRequestClose={() => {}}
-          // actionSubmit={() => {}}
-          // value={currentEditDevice}
+          onRequestClose={() => setShowModalCreateScedule(false)}
+          actionSubmit={() => {}}
+          deviceId={1}
           titleModal="เพิ่ม Schedule"
           iconModal={<IoIosAdd size={24} />}
+        />
+        <ModalSchedule
+          isOpen={showModalEditScedule}
+          onRequestClose={() => setShowModalEditScedule(false)}
+          actionSubmit={() => {}}
+          value={mockSchedule}
+          deviceId={1}
+          titleModal="แก้ไข Schedule"
+          iconModal={<FaPencilAlt size={24} />}
         />
         <Header
           title={"อุปกรณ์"}
