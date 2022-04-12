@@ -49,19 +49,5 @@ route.get("/:id", async (req, res) => {
   }
 });
 
-route.post("/create", async (req, res) => {
-  const { firstName, lastName } = req.body;
-  try {
-    const transaction = await Transactions.create({
-      firstName: firstName || "John",
-      lastName: lastName || "Hancock",
-    });
-    res.json(transaction);
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
-  }
-});
 
 export default route;

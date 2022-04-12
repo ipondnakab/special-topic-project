@@ -40,8 +40,8 @@ const Schedule = (sequelize: Sequelize.Sequelize) =>
         field: "period",
       },
       activeRelay: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER),
         field: "active_relay",
+        type: Sequelize.STRING,
       },
       deviceId: {
         type: Sequelize.INTEGER,

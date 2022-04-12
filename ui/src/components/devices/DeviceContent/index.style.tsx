@@ -58,8 +58,9 @@ export const RelayContent = styled.div`
   border-radius: 8px;
   background-color: #fff;
   justify-content: space-between;
-
+  overflow: hidden;
   flex-wrap: wrap;
+  position: relative;
   @media (max-width: 768px) {
     flex-direction: column;
     min-width: 180px;
@@ -95,6 +96,7 @@ export const LabelIcon = styled.div`
 export const BottomSectionContainer = styled.div`
   padding: 16px;
   border-radius: 8px;
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: #f2f2f2;

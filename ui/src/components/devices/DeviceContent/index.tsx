@@ -5,10 +5,10 @@ import {
   getAllByDevicesId,
   getLatestByDevicesId,
 } from "../../../apis/transactions";
-import { Device } from "../../../interfaces/devices";
+import { Device, DeviceMode } from "../../../interfaces/devices";
 import { Transaction } from "../../../interfaces/transaction";
 import { useDevicesContext } from "../../../pages/devices/useDevices";
-import { FlexCol } from "../../common";
+import { DisableComponent, FlexCol } from "../../common";
 import Header from "../../Header";
 import ButtonControlDevice from "../ButtonControlDevice";
 import CardSensor from "../CardSensor";
@@ -142,7 +142,7 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
               latestTransaction.timestamp || latestTransaction.createAt
             )
               .locale("th")
-              .format("HH:mm น. DD MMM YYYY")}`
+              .format("HH:mmน. DD MMM YYYY")}`
           ) : (
             "ยังไม่มีข้อมูล"
           )
@@ -152,6 +152,7 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
         <TransactionContainer>
           {transactionList.map((transaction) => (
             <CardSensor
+              key={transaction.name}
               {...transaction}
               latestTransaction={latestTransaction}
             />
@@ -167,7 +168,11 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
               <h1>{device[detail.name] || "-"}</h1>
             </DetailContent>
           ))}
+
           <RelayContent>
+            {device.mode === DeviceMode.AUTO && (
+              <DisableComponent title={"ต้องเปิดโหมด Manual"} />
+            )}
             {relayList.map((relay) => (
               <CheckboxToggle
                 key={relay.name}
@@ -192,9 +197,13 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
           </RelayContent>
         </DetailDeviceContainer>
         <BottomContainer>
-          <BottomSectionContainer>
+          <BottomSectionContainer style={{ flex: 0.5, minWidth: 380 }}>
+            {device.mode === DeviceMode.MANUAL && (
+              <DisableComponent title={"ต้องเปิดโหมด Auto"} />
+            )}
             <ScheduleContent device={device} />
           </BottomSectionContainer>
+
           <BottomSectionContainer>
             <ChartReport allTransaction={allTransaction} />
           </BottomSectionContainer>

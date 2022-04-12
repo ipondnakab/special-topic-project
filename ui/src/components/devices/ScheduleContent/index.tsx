@@ -113,7 +113,7 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
               (i) => i.name === item.condition
             );
             return (
-              <CardSchedule>
+              <CardSchedule key={item.id}>
                 <IconContainer isWeekly={isWeekly}>
                   {isWeekly ? (
                     <>
