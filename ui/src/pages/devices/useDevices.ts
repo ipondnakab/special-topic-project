@@ -7,6 +7,8 @@ import {
 } from "../../apis/devices";
 import { Device } from "../../interfaces/devices";
 import swal from "sweetalert2";
+import { Schedule } from "../../interfaces/schedule";
+import { createSchedule, deleteSchedule, updateSchedule } from "../../apis/schedules";
 
 export const deviceContext = React.createContext<ReturnType<typeof useDevices>>(
   {} as ReturnType<typeof useDevices>
@@ -47,6 +49,19 @@ function useDevices() {
     }
   };
 
+  const onCreateSchedule = async (
+    data: Pick<Schedule, "type" | "condition" | "value" | "period" | "activeRelay" | "deviceId">
+  ) => {
+    try {
+      console.log(data);
+      
+      const res = await createSchedule(data);
+      console.log(res);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   const onEditDevice = async (
     data: Partial<
       Pick<
@@ -71,6 +86,31 @@ function useDevices() {
     }
   };
 
+  const onEditSchedule = async (
+    data: Partial<
+      Pick<
+      Schedule,
+        "id" | "type" | "condition" | "value" | "period" | "activeRelay" | "deviceId"
+      >
+    >
+  ) => {
+    setIsLoading(true);
+    try {
+      if (!data.id) return;
+      const device = devices.find((d) =>
+        data.id ? d.id.toString() === data.id.toString() : false
+      );
+      if (!device) return;
+      const res = await updateSchedule(data.id.toString(), data);
+      console.log(res);
+      
+    } catch (error) {
+      console.log({ error });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const onChangeStatusRelay = async (
     id: string,
     relay: "statusRelay1" | "statusRelay2" | "statusRelay3" | "statusRelay4",
@@ -84,6 +124,24 @@ function useDevices() {
       await updateDevice(id, { [relay]: status });
       // await setTimeout(() => {}, 1000);
       await getAllDevices();
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  const onDeleteSchedule = async (id: string) => {
+    const { isConfirmed } = await swal.fire({
+      title: `ยืนยันการลบ`,
+      text: `คุณต้องการลบการทำงานอัตโนมัติหรือไม่`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#a33",
+      confirmButtonText: "ลบ",
+      cancelButtonText: "ยกเลิก",
+    });
+    if (!isConfirmed) return;
+    try {
+      const res = await deleteSchedule(id);
     } catch (error) {
       console.log({ error });
     }
@@ -120,6 +178,9 @@ function useDevices() {
     isLoading,
     onChangeStatusRelay,
     onDeleteDevice,
+    onCreateSchedule,
+    onDeleteSchedule,
+    onEditSchedule,
   };
 }
 

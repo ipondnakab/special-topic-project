@@ -36,6 +36,7 @@ const ChartReport: React.FC<ChartReportPropsType> = ({ allTransaction }) => {
         >
           {transactionList.map((chart) => (
             <Dataset
+              key={chart.name}
               title={chart.label}
               values={getArrayChartData(allTransaction, chart.name)}
               backgroundColor={chart.chartColors}

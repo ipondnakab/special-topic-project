@@ -24,7 +24,7 @@ const Devices: React.FC = () => {
     const [tapSelect, setTapSelect] = React.useState<string>();
 
   const customHookDevices = useDevices();
-  const { devices, isLoading, onCreateDevice, onEditDevice } =
+  const { devices, isLoading, onCreateDevice, onEditDevice, onCreateSchedule, onEditSchedule } =
     customHookDevices;
 
   React.useEffect(() => {
@@ -63,7 +63,7 @@ const Devices: React.FC = () => {
         <ModalSchedule
           isOpen={showModalCreateSchedule}
           onRequestClose={() => setShowModalCreateSchedule(false)}
-          actionSubmit={() => {}}
+          actionSubmit={onCreateSchedule}
           deviceId={Number(tapSelect)}
           titleModal={`เพิ่มการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}
           iconModal={<IoIosAdd size={28} />}
@@ -71,7 +71,7 @@ const Devices: React.FC = () => {
         <ModalSchedule
           isOpen={showModalEditSchedule}
           onRequestClose={() => setShowModalEditSchedule(false)}
-          actionSubmit={() => {}}
+          actionSubmit={onEditSchedule}
           deviceId={Number(tapSelect)}
           value={currentEditSchedule}
           titleModal={`แก้ไขการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}

@@ -1,16 +1,25 @@
 import React from "react";
 import { IoIosAdd } from "react-icons/io";
-import { Button, Spinner } from "react-rainbow-components";
+import { Button, ButtonIcon, Spinner } from "react-rainbow-components";
 import { Device } from "../../../interfaces/devices";
 import { Schedule, ScheduleType } from "../../../interfaces/schedule";
 import Header from "../../Header";
-import { CardSchedule, Container, ContentContainer, IconContainer, Label } from "./index.style";
+import {
+  CardSchedule,
+  Container,
+  ContentContainer,
+  IconContainer,
+  Label,
+} from "./index.style";
 import { transactionList } from "../index.config";
 import { getScheduleByDeviceId } from "../../../apis/schedules";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { useDevicesContext } from "../../../pages/devices/useDevices";
+
 export type ScheduleContentPropsType = {
   device: Device;
   setModalCreate: React.Dispatch<React.SetStateAction<boolean>>;
-  openEditModalSchedule: (device: Schedule) => void;
+  openEditModalSchedule: (schedule: Schedule) => void;
 };
 
 const dayToThai: { [key: string]: string } = {
@@ -23,15 +32,20 @@ const dayToThai: { [key: string]: string } = {
   sunday: "อาทิตย์",
 };
 
-const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device, setModalCreate, openEditModalSchedule }) => {
+const ScheduleContent: React.FC<ScheduleContentPropsType> = ({
+  device,
+  setModalCreate,
+  openEditModalSchedule,
+}) => {
   const [loading, setLoading] = React.useState(false);
-  const [schedule, setSchedle] = React.useState<Schedule[]>([  ]);
+  const [schedule, setSchedle] = React.useState<Schedule[]>([]);
+  const { onDeleteSchedule } = useDevicesContext();
 
   const getScheduleById = React.useCallback(async (id: string) => {
     try {
       const response = await getScheduleByDeviceId(id);
       if (!response) return;
-      setSchedle(response);      
+      setSchedle(response);
     } catch (error) {
       console.log({ error });
     }
@@ -53,10 +67,12 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device, setModalC
       <Header
         title={"การทำงานอัตโนมัติ"}
         extraRight={
-          <Button size="small" 
-          onClick={() => {setModalCreate(true)
-          console.log("click");
-          }}>
+          <Button
+            size="small"
+            onClick={() => {
+              setModalCreate(true);
+            }}
+          >
             <>
               <IoIosAdd
                 style={{
@@ -76,7 +92,7 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device, setModalC
               (i) => i.name === item.condition
             );
             return (
-              <CardSchedule>
+              <CardSchedule key={item.id}>
                 <IconContainer isWeekly={isWeekly}>
                   {isWeekly ? (
                     <>
@@ -91,18 +107,35 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device, setModalC
                 <Header
                   fontSize="1.25rem"
                   title={
-                    isWeekly ? dayToThai[item.condition] : sensorDetail?.label
+                    isWeekly
+                      ? dayToThai[item.condition.toString()]
+                      : sensorDetail?.label
                   }
                   extraRight={
-                    <Label>
-                      {item.value} {isWeekly ? "น." : sensorDetail?.unit}
-                    </Label>
+                    <>
+                      <Label>
+                        {item.value} {isWeekly ? "น." : sensorDetail?.unit}
+                      </Label>
+                      <ButtonIcon
+                        variant="base"
+                        size="medium"
+                        tooltip="แก้ไข"
+                        onClick={() => openEditModalSchedule(item)}
+                        icon={<FaPencilAlt />}
+                      />
+                      <ButtonIcon
+                        variant="base"
+                        size="medium"
+                        tooltip="ลบ"
+                        icon={<FaTrashAlt />}
+                        onClick={() => onDeleteSchedule(item.id.toString())}
+                      />
+                    </>
                   }
                   hideLine
                 />
                 <Label>
-                  เปิดสวิทช์ {item.activeRelay.join(", ")} เป็นเวลา{" "}
-                  {item.period} นาที
+                  เปิดสวิทช์ {item.activeRelay} เป็นเวลา {item.period} นาที
                 </Label>
               </CardSchedule>
             );
