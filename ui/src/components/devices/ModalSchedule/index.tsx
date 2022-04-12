@@ -11,7 +11,6 @@ import {
   ButtonOption,
   RadioGroup,
   CounterInput,
-  WeekDayPicker,
 } from "react-rainbow-components";
 import Header from "../../Header";
 import { FaTemperatureHigh } from "react-icons/fa";
@@ -87,8 +86,7 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
         data.activeRelay = data.activeRelay.join(", ");
       }
       data.type = scheduleType;
-      console.log(data);
-      
+
       await actionSubmit(data);
       reset();
       setScheduleType(ScheduleType.WEEKLY);
@@ -224,7 +222,6 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
           />
           <ButtonGroupPicker
             onChange={(value) => {
-              console.log({ value });
               const activeRelayCopy = activeRelayList;
               const newRelay = value[0].toString();
               if (activeRelayCopy.indexOf(newRelay) === -1) {

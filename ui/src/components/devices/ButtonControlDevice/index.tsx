@@ -33,7 +33,6 @@ const ButtonControlDevice: React.FC<ButtonControlDeviceType> = ({
         style={{ marginRight: "16px" }}
         value={device.mode}
         onChange={async (value) => {
-          console.log({ value });
           const mode = DeviceMode[value as DeviceMode];
           if (!mode) return;
           await onEditDevice({

@@ -12,9 +12,8 @@ import {
   Label,
 } from "./index.style";
 import { transactionList } from "../index.config";
-import { getScheduleByDeviceId } from "../../../apis/schedules";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { useDevicesContext } from "../../../pages/devices/useDevices";
+import useSchedule from "../../../pages/devices/useSchedule";
 
 export type ScheduleContentPropsType = {
   device: Device;
@@ -37,30 +36,16 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({
   setModalCreate,
   openEditModalSchedule,
 }) => {
-  const [loading, setLoading] = React.useState(false);
-  const [schedule, setSchedle] = React.useState<Schedule[]>([]);
-  const { onDeleteSchedule } = useDevicesContext();
-
-  const getScheduleById = React.useCallback(async (id: string) => {
-    try {
-      const response = await getScheduleByDeviceId(id);
-      if (!response) return;
-      setSchedle(response);
-    } catch (error) {
-      console.log({ error });
-    }
-  }, []);
+  const customHookSchedule = useSchedule();
+  const { schedule, setValueDeviceId, onDeleteSchedule, isLoading } = customHookSchedule;
 
   React.useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      await getScheduleById(device.id);
-      setLoading(false);
-    };
-    fetch();
-  }, [device, getScheduleById]);
+    setValueDeviceId(device.id);
+  }, [device, setValueDeviceId]);
 
-  return loading ? (
+  React.useEffect(() => {}, [schedule]);
+
+  return isLoading ? (
     <Spinner />
   ) : (
     <Container>
@@ -85,7 +70,9 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({
         }
       />
       <ContentContainer>
-        {!loading &&
+        {!isLoading &&
+          schedule &&
+          schedule.length > 0 &&
           schedule.map((item) => {
             const isWeekly = item.type === ScheduleType.WEEKLY;
             const sensorDetail = transactionList.find(

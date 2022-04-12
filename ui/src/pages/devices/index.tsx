@@ -11,6 +11,7 @@ import { Device } from "../../interfaces/devices";
 import { FcBrokenLink } from "react-icons/fc";
 import DeviceContent from "../../components/devices/DeviceContent";
 import { Schedule } from "../../interfaces/schedule";
+import useSchedule from "./useSchedule";
 
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
@@ -19,13 +20,16 @@ const Devices: React.FC = () => {
     React.useState(false);
   const [showModalEditSchedule, setShowModalEditSchedule] =
     React.useState(false);
-    const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
-    const [currentEditSchedule, setCurrentEditSchedule] = React.useState<Schedule>();
-    const [tapSelect, setTapSelect] = React.useState<string>();
+  const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
+  const [currentEditSchedule, setCurrentEditSchedule] =
+    React.useState<Schedule>();
+  const [tapSelect, setTapSelect] = React.useState<string>();
 
   const customHookDevices = useDevices();
-  const { devices, isLoading, onCreateDevice, onEditDevice, onCreateSchedule, onEditSchedule } =
+  const { devices, isLoading, onCreateDevice, onEditDevice } =
     customHookDevices;
+  const customHookSchedule = useSchedule();
+  const { onCreateSchedule, onEditSchedule } = customHookSchedule;
 
   React.useEffect(() => {
     if (devices.length > 0 && !tapSelect)
