@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Schedule } from "../interfaces/schedules";
+import { Schedule } from "../interfaces/schedule";
 
 const pathUrl = "/schedules";
 

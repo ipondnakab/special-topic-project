@@ -10,6 +10,7 @@ import { ContentContainer, EmptyContainer, TabsContainer } from "./index.style";
 import { Device } from "../../interfaces/devices";
 import { FcBrokenLink } from "react-icons/fc";
 import DeviceContent from "../../components/devices/DeviceContent";
+import { Schedule } from "../../interfaces/schedule";
 
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
@@ -18,8 +19,9 @@ const Devices: React.FC = () => {
     React.useState(false);
   const [showModalEditSchedule, setShowModalEditSchedule] =
     React.useState(false);
-  const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
-  const [tapSelect, setTapSelect] = React.useState<string>();
+    const [currentEditDevice, setCurrentEditDevice] = React.useState<Device>();
+    const [currentEditSchedule, setCurrentEditSchedule] = React.useState<Schedule>();
+    const [tapSelect, setTapSelect] = React.useState<string>();
 
   const customHookDevices = useDevices();
   const { devices, isLoading, onCreateDevice, onEditDevice } =
@@ -33,6 +35,11 @@ const Devices: React.FC = () => {
   const openEditModal = (data: Device) => {
     setCurrentEditDevice(data);
     setShowModalEdit(true);
+  };
+
+  const openEditModalSchedule = (data: Schedule) => {
+    setCurrentEditSchedule(data);
+    setShowModalEditSchedule(true);
   };
 
   return (
@@ -57,17 +64,17 @@ const Devices: React.FC = () => {
           isOpen={showModalCreateSchedule}
           onRequestClose={() => setShowModalCreateSchedule(false)}
           actionSubmit={() => {}}
-          deviceId={1}
-          titleModal="เพิ่มอุปกรณ์"
+          deviceId={Number(tapSelect)}
+          titleModal={`เพิ่มการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}
           iconModal={<IoIosAdd size={28} />}
         />
         <ModalSchedule
           isOpen={showModalEditSchedule}
           onRequestClose={() => setShowModalEditSchedule(false)}
           actionSubmit={() => {}}
-          deviceId={1}
-          // value={mockSchedule}
-          titleModal="แก้ไขข้อมูลอุปกรณ์"
+          deviceId={Number(tapSelect)}
+          value={currentEditSchedule}
+          titleModal={`แก้ไขการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}
           iconModal={<FaPencilAlt size={24} />}
         />
         <Header
@@ -115,6 +122,8 @@ const Devices: React.FC = () => {
                           device={device}
                           openEditModal={openEditModal}
                           tapSelect={tapSelect}
+                          setModalCreateSchedule={setShowModalCreateSchedule}
+                          openEditModalSchedule={openEditModalSchedule}
                         />
                       )
                   )}

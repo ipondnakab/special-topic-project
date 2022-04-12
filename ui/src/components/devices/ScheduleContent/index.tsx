@@ -4,11 +4,13 @@ import { Button, Spinner } from "react-rainbow-components";
 import { Device } from "../../../interfaces/devices";
 import { Schedule, ScheduleType } from "../../../interfaces/schedule";
 import Header from "../../Header";
-import { CardSchedule, IconContainer, Label } from "./index.style";
+import { CardSchedule, Container, ContentContainer, IconContainer, Label } from "./index.style";
 import { transactionList } from "../index.config";
-import { getSchedule, getScheduleByDeviceId } from "../../../apis/schedules";
+import { getScheduleByDeviceId } from "../../../apis/schedules";
 export type ScheduleContentPropsType = {
   device: Device;
+  setModalCreate: React.Dispatch<React.SetStateAction<boolean>>;
+  openEditModalSchedule: (device: Schedule) => void;
 };
 
 const dayToThai: { [key: string]: string } = {
@@ -21,46 +23,40 @@ const dayToThai: { [key: string]: string } = {
   sunday: "อาทิตย์",
 };
 
-const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
+const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device, setModalCreate, openEditModalSchedule }) => {
   const [loading, setLoading] = React.useState(false);
   const [schedule, setSchedle] = React.useState<Schedule[]>([  ]);
 
-  // const getScheduleById = React.useCallback(async () => {
-  //   try {
-  //     const response = await getSchedule();
-  //     if (!response) return;
-  //     // setSchedle(response);
-  //     console.log(response);
-      
-  //   } catch (error) {
-  //     console.log({ error });
-  //   }
-  // }, []);
+  const getScheduleById = React.useCallback(async (id: string) => {
+    try {
+      const response = await getScheduleByDeviceId(id);
+      if (!response) return;
+      setSchedle(response);      
+    } catch (error) {
+      console.log({ error });
+    }
+  }, []);
 
-  // React.useEffect(() => {
-  //   const fetch = async () => {
-  //     setLoading(true);
-  //     await getScheduleById();
-  //     setLoading(false);
-  //   };
-  //   fetch();
-  // }, [device, getScheduleById]);
+  React.useEffect(() => {
+    const fetch = async () => {
+      setLoading(true);
+      await getScheduleById(device.id);
+      setLoading(false);
+    };
+    fetch();
+  }, [device, getScheduleById]);
 
   return loading ? (
     <Spinner />
   ) : (
-    <div
-      style={{
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        overflow: "scroll",
-      }}
-    >
+    <Container>
       <Header
         title={"การทำงานอัตโนมัติ"}
         extraRight={
-          <Button size="small">
+          <Button size="small" 
+          onClick={() => {setModalCreate(true)
+          console.log("click");
+          }}>
             <>
               <IoIosAdd
                 style={{
@@ -72,7 +68,7 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
           </Button>
         }
       />
-      <div style={{ flex: 1, overflow: "scroll" }}>
+      <ContentContainer>
         {!loading &&
           schedule.map((item) => {
             const isWeekly = item.type === ScheduleType.WEEKLY;
@@ -111,8 +107,8 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
               </CardSchedule>
             );
           })}
-      </div>
-    </div>
+      </ContentContainer>
+    </Container>
   );
 };
 

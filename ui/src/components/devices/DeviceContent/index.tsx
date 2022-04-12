@@ -26,18 +26,22 @@ import {
 import "dayjs/locale/th"; // import locale
 import ChartReport from "../ChartReport";
 import ScheduleContent from "../ScheduleContent";
+import { Schedule } from "../../../interfaces/schedule";
 
 export type DeviceContentPropsType = {
   device: Device;
-
   openEditModal: (device: Device) => void;
+  openEditModalSchedule: (device: Schedule) => void;
   tapSelect: string;
+  setModalCreateSchedule: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DeviceContent: React.FC<DeviceContentPropsType> = ({
   device,
-  tapSelect,
   openEditModal,
+  openEditModalSchedule,
+  tapSelect,
+  setModalCreateSchedule
 }) => {
   const { onChangeStatusRelay } = useDevicesContext();
   const [loadingRelay1, setLoadingRelay1] = React.useState(false);
@@ -193,10 +197,10 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
         </DetailDeviceContainer>
         <BottomContainer>
           <BottomSectionContainer>
-            <ScheduleContent device={device} />
+            <ScheduleContent device={device} setModalCreate={setModalCreateSchedule} openEditModalSchedule={openEditModalSchedule} />
           </BottomSectionContainer>
           <BottomSectionContainer>
-            <ChartReport allTransaction={allTransaction} />
+            <ChartReport allTransaction={allTransaction} key={0} />
           </BottomSectionContainer>
         </BottomContainer>
       </ContentTabContainer>

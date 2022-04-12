@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useMemo } from "react";
-import { RegisterOptions, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   Button,
   Input,
@@ -10,9 +10,10 @@ import {
   ButtonGroupPicker,
   ButtonOption,
   RadioGroup,
+  CounterInput,
+  WeekDayPicker,
 } from "react-rainbow-components";
 import Header from "../../Header";
-import { GiSandsOfTime } from "react-icons/gi";
 import { FaTemperatureHigh } from "react-icons/fa";
 import { Schedule, ScheduleType } from "../../../interfaces/schedule";
 import { ContentInput, Form } from "./index.style";
@@ -27,15 +28,15 @@ const optionsType = [
   { value: ScheduleType.SENSOR, label: "Sensor" },
 ];
 
-const optionsDay = [
-  { value: "monday", label: "จันทร์" },
-  { value: "tuesday", label: "อังคาร" },
-  { value: "wednesday", label: "พุธ" },
-  { value: "thursday", label: "พฤหัสบดี" },
-  { value: "friday", label: "ศุกร์" },
-  { value: "satueday", label: "เสาร์" },
-  { value: "sunday", label: "อาทิตย์" },
-];
+// const optionsDay = [
+//   { value: "monday", label: "จันทร์" },
+//   { value: "tuesday", label: "อังคาร" },
+//   { value: "wednesday", label: "พุธ" },
+//   { value: "thursday", label: "พฤหัสบดี" },
+//   { value: "friday", label: "ศุกร์" },
+//   { value: "satueday", label: "เสาร์" },
+//   { value: "sunday", label: "อาทิตย์" },
+// ];
 
 const optionsSensor = [
   { value: "temperature", label: "อุณหภูมิ" },
@@ -113,18 +114,19 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
         <Header extraLeft={iconModal} title={titleModal} />
         <ContentInput>
           <div>
-          <RadioGroup
-            options={optionsType}
-            value={scheduleType}
-            onChange={(e) => {
-              setValue("type", e.target.value as ScheduleType);
-              setScheduleType(e.target.value as ScheduleType);
-            }}
-            label="กรุณาเลือกประเภท Schedule"
-          /></div>
+            <RadioGroup
+              options={optionsType}
+              value={scheduleType}
+              onChange={(e) => {
+                setValue("type", e.target.value as ScheduleType);
+                setScheduleType(e.target.value as ScheduleType);
+              }}
+              label="กรุณาเลือกประเภท Schedule"
+            />
+          </div>
           {scheduleType === ScheduleType.WEEKLY && (
             <>
-              <Select
+              {/* <Select
                 key={"condition"}
                 label={"กำหนดวัน"}
                 labelAlignment="left"
@@ -134,11 +136,25 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
                 options={optionsDay}
                 // value={watch(item.name)}
               />
+               */}
+              <WeekDayPicker
+                label={"กำหนดวัน"}
+                key={"condition"}
+                labelAlignment="left"
+                error={errors[item.name]?.message}
+                {...register("condition", { required: "กรุณาเลือกวัน" })}
+                onChange={(value) => {
+                  setValue("condition", value.toString());
+                }}
+                locale={"th"}
+                value={watch("condition")}
+              />
               <TimePicker
+                key={"value"}
                 label="เวลา"
                 okLabel={"ตกลง"}
                 cancelLabel={"ยกเลิก"}
-                value={"10:22"}
+                value={watch("value")}
                 className={"time-picker"}
                 labelAlignment="left"
                 onChange={(value) => setValue("value", value.toString())}
@@ -152,11 +168,11 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
                 key={"condition"}
                 label={"ชื่อ Sensor"}
                 labelAlignment="left"
-                // error={errors[item.name]?.message}
+                error={errors[item.name]?.message}
                 {...register("condition", { required: "กรุณาเลือก Sensor" })}
                 onChange={(e) => setValue("condition", e.target.value)}
                 options={optionsSensor}
-                // value={watch(item.name)}
+                value={watch("condition")}
               />
               <Input
                 key={"value"}
@@ -165,16 +181,16 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
                 labelAlignment="left"
                 placeholder={"อุณหภูมิ (เซลเซียส)..."}
                 type={"number"}
-                // error={errors[item.name]?.message}
+                error={errors[item.name]?.message}
                 {...register("value", {
                   required: "กรุณากรอกอุณหภูมิ (เซลเซียส)",
                 })}
                 onChange={(e) => setValue("value", e.target.value)}
-                // value={watch(item.name)}
+                value={watch("value")}
               />
             </>
           )}
-          <Input
+          {/* <Input
             key={"period"}
             icon={<GiSandsOfTime />}
             label={"ตั้งเวลาการเปิด Relay (นาที)"}
@@ -185,15 +201,30 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
             {...register("period", {
               required: "กรุณากรอกเวลาสำหรับการเปิด Relay",
             })}
-            onChange={(e) => setValue("period", e.target.value)}
+            min={0}
+            max={1440}
+            onChange={(e) => {
+              setValue("period", e.target.value);
+            }}
             // value={watch(item.name)}
+          /> */}
+          <CounterInput
+            key={"period"}
+            label={"ตั้งเวลาการเปิด Relay (นาที)"}
+            labelAlignment="left"
+            placeholder={"ตั้งเวลา..."}
+            error={errors[item.name]?.message}
+            min={1}
+            max={1440}
+            onChange={(value) => {
+              setValue("period", value.toString());
+            }}
+            value={watch("period")}
           />
           <ButtonGroupPicker
             id="button-group-picker-component-3"
-            // className="rainbow-m-around_medium"
-            // value={watch(item.name)}
             // onChange={(value) => setValue("activeRelay", value)}
-            value={["1", "3"]}
+            value={watch("activeRelay")}
             name="activeRelay"
             multiple
           >

@@ -5,6 +5,21 @@ export const Container = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+`;
+
+export const ContentContainer = styled.div`
+  flex: 1;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
 `;
 
 export const CardSchedule = styled.div`
@@ -24,9 +39,6 @@ export const IconContainer = styled.div`
   left: 0;
   bottom: 0;
   width: 48px;
-  /* background-color: ${({ isWeekly }: { isWeekly?: boolean }) =>
-    isWeekly ? "#f99" : "#99f"}; */
-
   background-image: ${({ isWeekly }: { isWeekly?: boolean }) =>
     isWeekly
       ? "radial-gradient( circle farthest-corner at 10% 20%,  #87c7a4 0%, #5bd4d6 90% )"
@@ -37,7 +49,7 @@ export const IconContainer = styled.div`
   justify-content: center;
   color: #fff;
   & svg {
-      margin-bottom: 16px;
+    margin-bottom: 16px;
   }
   & span {
     padding: 0 8px;
