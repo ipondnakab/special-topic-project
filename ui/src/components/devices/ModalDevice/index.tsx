@@ -71,7 +71,7 @@ export type ModalPropsType = {
   iconModal: ReactElement<any, any>;
 };
 
-const ModalCreateDevice: React.FC<ModalPropsType> = ({
+const ModalDevice: React.FC<ModalPropsType> = ({
   isOpen,
   onRequestClose,
   actionSubmit,
@@ -124,9 +124,9 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Header extraLeft={iconModal} title={titleModal} />
         <ContentInput>
-          {inputs.map((item) => (
+          {inputs.map((item, index) => (
             <Input
-              key={item.name}
+              key={item.name+index}
               icon={item.icon}
               label={item.label}
               labelAlignment="left"
@@ -135,7 +135,6 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
               error={errors[item.name]?.message}
               {...register(item.name, item.rules)}
               onChange={(e) => setValue(item.name, e.target.value)}
-              // value={value?.[item.name]}
               value={watch(item.name)}
             />
           ))}
@@ -153,4 +152,4 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
   );
 };
 
-export default ModalCreateDevice;
+export default ModalDevice;

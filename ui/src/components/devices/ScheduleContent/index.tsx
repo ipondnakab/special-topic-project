@@ -1,13 +1,24 @@
 import React from "react";
 import { IoIosAdd } from "react-icons/io";
-import { Button, Spinner } from "react-rainbow-components";
+import { Button, ButtonIcon, Spinner } from "react-rainbow-components";
 import { Device } from "../../../interfaces/devices";
 import { Schedule, ScheduleType } from "../../../interfaces/schedule";
 import Header from "../../Header";
-import { CardSchedule, Container, ContentContainer, IconContainer, Label } from "./index.style";
+import {
+  CardSchedule,
+  Container,
+  ContentContainer,
+  IconContainer,
+  Label,
+} from "./index.style";
 import { transactionList } from "../index.config";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import {useScheduleContext} from "../../../pages/devices/useSchedule";
+
 export type ScheduleContentPropsType = {
   device: Device;
+  setModalCreate: React.Dispatch<React.SetStateAction<boolean>>;
+  openEditModalSchedule: (schedule: Schedule) => void;
 };
 
 const dayToThai: { [key: string]: string } = {
@@ -20,93 +31,45 @@ const dayToThai: { [key: string]: string } = {
   sunday: "อาทิตย์",
 };
 
-const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
-  const [loading, setLoading] = React.useState(false);
-  const [schedule] = React.useState<Schedule[] | "loading">([
-    {
-      id: 1,
-      type: ScheduleType.WEEKLY,
-      condition: "sunday",
-      value: "10:00",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 2,
-      type: ScheduleType.SENSOR,
-      condition: "temperature",
-      value: "28",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 3,
-      type: ScheduleType.WEEKLY,
-      condition: "sunday",
-      value: "10:00",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 4,
-      type: ScheduleType.SENSOR,
-      condition: "temperature",
-      value: "28",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 5,
-      type: ScheduleType.WEEKLY,
-      condition: "sunday",
-      value: "10:00",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-    {
-      id: 6,
-      type: ScheduleType.SENSOR,
-      condition: "temperature",
-      value: "28",
-      period: "30",
-      deviceId: 1,
-      activeRelay: [1, 2],
-    },
-  ]);
+const ScheduleContent: React.FC<ScheduleContentPropsType> = ({
+  device,
+  setModalCreate,
+  openEditModalSchedule,
+}) => {
+  const { schedule, setValueDeviceId, onDeleteSchedule, isLoading } = useScheduleContext();
 
   React.useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      setLoading(false);
-    };
-    fetch();
-  }, [device]);
-  return loading ? (
+    setValueDeviceId(device.id);
+  }, [device, setValueDeviceId]);
+
+  return isLoading ? (
     <Spinner />
   ) : (
     <Container>
       <Header
         title={"การทำงานอัตโนมัติ"}
         extraRight={
-          <Button size="small">
+          <Button
+            size="small"
+            onClick={() => {
+              setModalCreate(true);
+            }}
+          >
             <>
               <IoIosAdd
                 style={{
                   marginRight: 8,
                 }}
               />
-              เงือนไข
+              เพิ่มเงื่อนไข
             </>
           </Button>
         }
       />
       <ContentContainer>
-        {schedule !== "loading" &&
+        {!isLoading &&
+          schedule &&
+          schedule.length > 0 &&
           schedule.map((item) => {
             const isWeekly = item.type === ScheduleType.WEEKLY;
             const sensorDetail = transactionList.find(
@@ -128,18 +91,35 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({ device }) => {
                 <Header
                   fontSize="1.25rem"
                   title={
-                    isWeekly ? dayToThai[item.condition] : sensorDetail?.label
+                    isWeekly
+                      ? dayToThai[item.condition.toString()]
+                      : sensorDetail?.label
                   }
                   extraRight={
-                    <Label>
-                      {item.value} {isWeekly ? "น." : sensorDetail?.unit}
-                    </Label>
+                    <>
+                      <Label>
+                        {item.value} {isWeekly ? "น." : sensorDetail?.unit}
+                      </Label>
+                      <ButtonIcon
+                        variant="base"
+                        size="medium"
+                        tooltip="แก้ไข"
+                        onClick={() => openEditModalSchedule(item)}
+                        icon={<FaPencilAlt />}
+                      />
+                      <ButtonIcon
+                        variant="base"
+                        size="medium"
+                        tooltip="ลบ"
+                        icon={<FaTrashAlt />}
+                        onClick={() => onDeleteSchedule(item.id.toString())}
+                      />
+                    </>
                   }
                   hideLine
                 />
                 <Label>
-                  เปิดสวิทช์ {item.activeRelay.join(", ")} เป็นเวลา{" "}
-                  {item.period} นาที
+                  เปิดสวิทช์ {item.activeRelay} เป็นเวลา {item.period} นาที
                 </Label>
               </CardSchedule>
             );

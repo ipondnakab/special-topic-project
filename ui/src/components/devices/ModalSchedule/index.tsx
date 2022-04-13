@@ -1,107 +1,94 @@
 import React, { ReactElement, useEffect, useMemo } from "react";
-import { RegisterOptions, useForm } from "react-hook-form";
-import { Button, Input, Modal, Spinner } from "react-rainbow-components";
+import { useForm } from "react-hook-form";
+import {
+  Button,
+  Input,
+  Modal,
+  Spinner,
+  Select,
+  TimePicker,
+  ButtonGroupPicker,
+  ButtonOption,
+  RadioGroup,
+  CounterInput,
+} from "react-rainbow-components";
 import Header from "../../Header";
-import { BiDevices, BiKey, BiWifi } from "react-icons/bi";
-import { HiOutlineLocationMarker } from "react-icons/hi";
-import styled from "styled-components";
-import { Device } from "../../../interfaces/devices";
-const ContentInput = styled.div`
-  padding: 1.5rem 1rem;
-  & > div {
-    margin-bottom: 0.5rem;
-  }
-`;
+import { FaTemperatureHigh } from "react-icons/fa";
+import { Schedule, ScheduleType } from "../../../interfaces/schedule";
+import { ContentInput, Form } from "./index.style";
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-type DeviceForm = Pick<
-  Device,
-  "id" | "name" | "ipAddress" | "wifiName" | "wifiPassword"
+type ScheduleForm = Pick<
+  Schedule,
+  "id" | "type" | "condition" | "value" | "period" | "activeRelay" | "deviceId"
 >;
 
-const inputs: {
-  label: string;
-  icon: JSX.Element;
-  placeholder: string;
-  name: keyof DeviceForm;
-  rules: RegisterOptions;
-  type?: "text" | "password";
-}[] = [
-  {
-    label: "ชื่ออุปกรณ์",
-    icon: <BiDevices />,
-    placeholder: "ชื่ออุปกรณ์...",
-    name: "name",
-    rules: { required: "กรุณากรอกชื่ออุปกรณ์" },
-  },
-  {
-    label: "IP Address",
-    icon: <HiOutlineLocationMarker />,
-    placeholder: "IP Address...",
-    name: "ipAddress",
-    rules: { required: "กรุณากรอก IP Address" },
-  },
-  {
-    label: "ชื่อ Wifi",
-    icon: <BiWifi />,
-    placeholder: "ชื่อ Wifi...",
-    name: "wifiName",
-    rules: { required: "กรุณากรอกชื่อ Wifi" },
-  },
-  {
-    label: "รหัส Wifi",
-    icon: <BiKey />,
-    placeholder: "รหัส Wifi",
-    name: "wifiPassword",
-    rules: { required: "กรุณากรอกรหัส Wifi" },
-    type: "password",
-  },
+const optionsType = [
+  { value: ScheduleType.WEEKLY, label: "รายสัปดาห์" },
+  { value: ScheduleType.SENSOR, label: "Sensor" },
+];
+
+const optionsDay = [
+  { value: "monday", label: "จันทร์" },
+  { value: "tuesday", label: "อังคาร" },
+  { value: "wednesday", label: "พุธ" },
+  { value: "thursday", label: "พฤหัสบดี" },
+  { value: "friday", label: "ศุกร์" },
+  { value: "satueday", label: "เสาร์" },
+  { value: "sunday", label: "อาทิตย์" },
+];
+
+const optionsSensor = [
+  { value: "temperature", label: "อุณหภูมิ", key: "temperature" },
+  { value: "moisture", label: "ความชื้น", key: "moisture" },
+  { value: "soilMoisture", label: "ความชื้นของดิน", key: "soilMoisture" },
+  { value: "windSpeed", label: "ความเร็วลม", key: "windSpeed" },
 ];
 
 export type ModalPropsType = {
   isOpen?: boolean;
+  deviceId: number;
   onRequestClose?: () => void;
-  actionSubmit: (data: Pick<Device, any>) => Promise<void>;
-  value?: DeviceForm;
+  actionSubmit: (data: Pick<Schedule, any>) => Promise<void>;
+  value?: ScheduleForm;
   titleModal: string;
   iconModal: ReactElement<any, any>;
 };
 
-const ModalCreateDevice: React.FC<ModalPropsType> = ({
+const ModalSchedule: React.FC<ModalPropsType> = ({
   isOpen,
+  deviceId,
   onRequestClose,
   actionSubmit,
   value,
   titleModal,
   iconModal,
 }) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-    reset,
-    watch,
-  } = useForm<DeviceForm>({
-    defaultValues: useMemo(() => {
-      return value;
-    }, [value]),
-  });
+  const { register, handleSubmit, setValue, reset, watch } =
+    useForm<ScheduleForm>({
+      defaultValues: useMemo(() => {
+        return value;
+      }, [value]),
+    });
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [scheduleType, setScheduleType] = React.useState<ScheduleType>(
+    ScheduleType.WEEKLY
+  );
 
-  const onSubmit = async (data: DeviceForm) => {
+  const onSubmit = async (data: ScheduleForm) => {
     setIsLoading(true);
     try {
       if (value?.id) {
         data.id = value.id;
       }
+      if (Array.isArray(data.activeRelay)) {
+        data.activeRelay = data.activeRelay.join(", ");
+      }
+      data.type = scheduleType;
+
       await actionSubmit(data);
       reset();
+      setScheduleType(ScheduleType.WEEKLY);
       onRequestClose && onRequestClose();
     } catch (error) {
       console.log({ error });
@@ -111,34 +98,111 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
   };
 
   useEffect(() => {
+    setValue("deviceId", deviceId);
+
     if (value) {
-      setValue("name", value.name);
-      setValue("ipAddress", value.ipAddress);
-      setValue("wifiName", value.wifiName);
-      setValue("wifiPassword", value.wifiPassword);
+      setScheduleType(value.type);
+      setValue("condition", value.condition);
+      setValue("value", value.value);
+      setValue("period", value.period);
+      const activeRelaySplit = value.activeRelay;
+      setValue("activeRelay", activeRelaySplit);
     }
-  }, [setValue, value]);
+  }, [deviceId, scheduleType, setValue, value]);
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Header extraLeft={iconModal} title={titleModal} />
         <ContentInput>
-          {inputs.map((item) => (
-            <Input
-              key={item.name}
-              icon={item.icon}
-              label={item.label}
-              labelAlignment="left"
-              placeholder={item.placeholder}
-              type={item.type}
-              error={errors[item.name]?.message}
-              {...register(item.name, item.rules)}
-              onChange={(e) => setValue(item.name, e.target.value)}
-              // value={value?.[item.name]}
-              value={watch(item.name)}
+          <div>
+            <RadioGroup
+              id="typeRadio"
+              options={optionsType}
+              value={scheduleType}
+              onChange={(e) => {
+                setValue("type", e.target.value as ScheduleType);
+                setScheduleType(e.target.value as ScheduleType);
+              }}
+              label="กรุณาเลือกประเภท Schedule"
             />
-          ))}
+          </div>
+          {scheduleType === ScheduleType.WEEKLY && (
+            <>
+              <Select
+                key={"condition"}
+                label={"กำหนดวัน"}
+                labelAlignment="left"
+                {...register("condition", { required: "กรุณาเลือกวัน" })}
+                onChange={(e) => setValue("condition", e.target.value)}
+                options={optionsDay}
+                value={watch("condition")}
+              />
+              <TimePicker
+                key={"valueScheduleWeekly"}
+                label="เวลา"
+                okLabel={"ตกลง"}
+                cancelLabel={"ยกเลิก"}
+                value={watch("value")}
+                className={"time-picker"}
+                labelAlignment="left"
+                onChange={(value) => setValue("value", value.toString())}
+                hour24
+              />
+            </>
+          )}
+          {scheduleType === ScheduleType.SENSOR && (
+            <>
+              <Select
+                key={"conditionScheduleSensor"}
+                label={"ชื่อ Sensor"}
+                labelAlignment="left"
+                {...register("condition", { required: "กรุณาเลือก Sensor" })}
+                onChange={(e) => setValue("condition", e.target.value)}
+                options={optionsSensor}
+                value={watch("condition")}
+              />
+              <Input
+                key={"valueScheduleSensor"}
+                icon={<FaTemperatureHigh />}
+                label={"อุณหภูมิ (เซลเซียส)"}
+                labelAlignment="left"
+                placeholder={"อุณหภูมิ (เซลเซียส)..."}
+                type={"number"}
+                {...register("value", {
+                  required: "กรุณากรอกอุณหภูมิ (เซลเซียส)",
+                })}
+                onChange={(e) => setValue("value", e.target.value)}
+                value={watch("value")}
+              />
+            </>
+          )}
+          <CounterInput
+            key={"period"}
+            label={"ตั้งเวลาการเปิด Relay (นาที)"}
+            labelAlignment="left"
+            placeholder={"ตั้งเวลา..."}
+            min={1}
+            max={1440}
+            onChange={(value) => {
+              setValue("period", value);
+            }}
+            value={watch("period")}
+          />
+          <ButtonGroupPicker
+            onChange={(value) => {
+              setValue("activeRelay", value);
+            }}
+            value={watch("activeRelay")}
+            name="activeRelay"
+            key="activeRelay"
+            multiple
+          >
+            <ButtonOption label={"สวิตซ์ 1"} name="1" key="activeRelay1" />
+            <ButtonOption label={"สวิตซ์ 2"} name="2" key="activeRelay2" />
+            <ButtonOption label={"สวิตซ์ 3"} name="3" key="activeRelay3" />
+            <ButtonOption label={"สวิตซ์ 4"} name="4" key="activeRelay4" />
+          </ButtonGroupPicker>
         </ContentInput>
         <Button
           type="submit"
@@ -153,4 +217,4 @@ const ModalCreateDevice: React.FC<ModalPropsType> = ({
   );
 };
 
-export default ModalCreateDevice;
+export default ModalSchedule;

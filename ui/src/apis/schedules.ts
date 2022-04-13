@@ -12,16 +12,16 @@ export const getSchedule = async () => {
   }
 };
 
-export const getDeviceById = async (id: string) => {
+export const getScheduleByDeviceId = async (id: string) => {
   try {
-    const response = await axios.get<Schedule>(`${pathUrl}/${id}`);
+    const response = await axios.get<Schedule[]>(`${pathUrl}/${id}`);
     return response.data;
   } catch (error) {
     console.log({ error });
   }
 };
 
-export const createDeviceSchedule = async (
+export const createSchedule = async (
   data: Pick<
     Schedule,
     "type" | "condition" | "value" | "period" | "activeRelay"
@@ -35,7 +35,7 @@ export const createDeviceSchedule = async (
   }
 };
 
-export const updateDeviceSchedule = async (
+export const updateSchedule = async (
   id: string,
   data: Partial<Schedule>
 ) => {
@@ -47,7 +47,7 @@ export const updateDeviceSchedule = async (
   }
 };
 
-export const deleteDeviceSchedule = async (id: string) => {
+export const deleteSchedule = async (id: string) => {
   try {
     const response = await axios.delete(`${pathUrl}/${id}`);
     return response.data;

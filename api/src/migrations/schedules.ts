@@ -43,7 +43,7 @@ const mockSchedule = [
   },
   {
     type: ScheduleType.SENSOR,
-    condition: "Device 3",
+    condition: "temperature",
     value: "35.4",
     period: "60",
     activeRelay: [3, 4].join(", "),
@@ -59,7 +59,7 @@ const mockSchedule = [
   },
   {
     type: ScheduleType.SENSOR,
-    condition: "Device 4",
+    condition: "temperature",
     value: "34.2",
     period: "60",
     activeRelay: [4, 1].join(", "),

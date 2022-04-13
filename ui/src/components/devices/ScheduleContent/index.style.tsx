@@ -30,7 +30,6 @@ export const CardSchedule = styled.div`
   margin: 8px;
   padding-left: 48px;
   position: relative;
-  cursor: pointer;
 `;
 
 export const IconContainer = styled.div`

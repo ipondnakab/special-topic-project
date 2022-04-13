@@ -17,6 +17,7 @@ export const useDevicesContext = () => React.useContext(deviceContext);
 function useDevices() {
   const [devices, setDevices] = React.useState<Device[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  
   const getAllDevices = React.useCallback(async () => {
     try {
       const response = await getDevices();
