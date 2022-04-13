@@ -23,8 +23,8 @@ type ScheduleForm = Pick<
 >;
 
 const optionsType = [
-  { value: ScheduleType.WEEKLY, label: "รายสัปดาห์", key: "weekly" },
-  { value: ScheduleType.SENSOR, label: "Sensor", key: "sensor" },
+  { value: ScheduleType.WEEKLY, label: "รายสัปดาห์" },
+  { value: ScheduleType.SENSOR, label: "Sensor" },
 ];
 
 const optionsDay = [
@@ -74,7 +74,6 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
   const [scheduleType, setScheduleType] = React.useState<ScheduleType>(
     ScheduleType.WEEKLY
   );
-  const [activeRelayList, setActiveRelayList] = React.useState<string[]>([]);
 
   const onSubmit = async (data: ScheduleForm) => {
     setIsLoading(true);
@@ -90,7 +89,6 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
       await actionSubmit(data);
       reset();
       setScheduleType(ScheduleType.WEEKLY);
-      setActiveRelayList([]);
       onRequestClose && onRequestClose();
     } catch (error) {
       console.log({ error });
@@ -107,11 +105,14 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
       setValue("condition", value.condition);
       setValue("value", value.value);
       setValue("period", value.period);
-      const activeRelaySplit = value.activeRelay.toString().split(",");
-      setActiveRelayList(activeRelaySplit);
+      const activeRelaySplit = value.activeRelay;
       setValue("activeRelay", activeRelaySplit);
     }
   }, [deviceId, scheduleType, setValue, value]);
+
+  useEffect(() => {
+    console.log(watch("activeRelay"));
+  }, [watch]);
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
@@ -120,6 +121,7 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
         <ContentInput>
           <div>
             <RadioGroup
+            id="typeRadio"
               options={optionsType}
               value={scheduleType}
               onChange={(e) => {
@@ -140,18 +142,6 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
                 options={optionsDay}
                 value={watch("condition")}
               />
-
-              {/* <WeekDayPicker
-                label={"กำหนดวัน"}
-                key={"conditionScheduleWeekly"}
-                labelAlignment="left"
-                {...register("condition", { required: "กรุณาเลือกวัน" })}
-                onChange={(value) => {
-                  setValue("condition", value.toString());
-                }}
-                locale={"th"}
-                // value={watch("condition") || "monday"}
-              /> */}
               <TimePicker
                 key={"valueScheduleWeekly"}
                 label="เวลา"
@@ -191,23 +181,6 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
               />
             </>
           )}
-          {/* <Input
-            key={"period"}
-            icon={<GiSandsOfTime />}
-            label={"ตั้งเวลาการเปิด Relay (นาที)"}
-            labelAlignment="left"
-            placeholder={"ตั้งเวลา..."}
-            type={"number"}
-            {...register("period", {
-              required: "กรุณากรอกเวลาสำหรับการเปิด Relay",
-            })}
-            min={0}
-            max={1440}
-            onChange={(e) => {
-              setValue("period", e.target.value);
-            }}
-            // value={watch(item.name)}
-          /> */}
           <CounterInput
             key={"period"}
             label={"ตั้งเวลาการเปิด Relay (นาที)"}
@@ -222,15 +195,9 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
           />
           <ButtonGroupPicker
             onChange={(value) => {
-              const activeRelayCopy = activeRelayList;
-              const newRelay = value[0].toString();
-              if (activeRelayCopy.indexOf(newRelay) === -1) {
-                activeRelayCopy.push(newRelay);
-              }
-              setActiveRelayList(activeRelayCopy);
-              setValue("activeRelay", activeRelayCopy);
+              setValue("activeRelay", value);
             }}
-            value={activeRelayList}
+            value={watch("activeRelay")}
             name="activeRelay"
             key="activeRelay"
             multiple

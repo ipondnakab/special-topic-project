@@ -11,7 +11,7 @@ import { Device } from "../../interfaces/devices";
 import { FcBrokenLink } from "react-icons/fc";
 import DeviceContent from "../../components/devices/DeviceContent";
 import { Schedule } from "../../interfaces/schedule";
-import useSchedule from "./useSchedule";
+import useSchedule, { scheduleContext } from "./useSchedule";
 
 const Devices: React.FC = () => {
   const [showModalCreate, setShowModalCreate] = React.useState(false);
@@ -48,6 +48,7 @@ const Devices: React.FC = () => {
 
   return (
     <deviceContext.Provider value={customHookDevices}>
+      <scheduleContext.Provider value={customHookSchedule}>
       <>
         <ModalDevice
           isOpen={showModalCreate}
@@ -72,15 +73,22 @@ const Devices: React.FC = () => {
           titleModal={`เพิ่มการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}
           iconModal={<IoIosAdd size={28} />}
         />
-        <ModalSchedule
-          isOpen={showModalEditSchedule}
-          onRequestClose={() => setShowModalEditSchedule(false)}
-          actionSubmit={onEditSchedule}
-          deviceId={Number(tapSelect)}
-          value={currentEditSchedule}
-          titleModal={`แก้ไขการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}
-          iconModal={<FaPencilAlt size={24} />}
-        />
+        {currentEditSchedule && (
+          <ModalSchedule
+            isOpen={showModalEditSchedule}
+            onRequestClose={() => setShowModalEditSchedule(false)}
+            actionSubmit={onEditSchedule}
+            deviceId={Number(tapSelect)}
+            value={{
+              ...currentEditSchedule,
+              activeRelay: currentEditSchedule.activeRelay
+                .toString()
+                .split(/[, ]+/),
+            }}
+            titleModal={`แก้ไขการทำงานอัตโนมัติของอุปกรณ์ ${tapSelect}`}
+            iconModal={<FaPencilAlt size={24} />}
+          />
+        )}
         <Header
           title={"อุปกรณ์"}
           extraRight={
@@ -137,6 +145,7 @@ const Devices: React.FC = () => {
           </TabsContainer>
         )}
       </>
+      </scheduleContext.Provider>
     </deviceContext.Provider>
   );
 };

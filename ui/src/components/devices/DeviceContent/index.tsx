@@ -154,17 +154,17 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
       />
       <ContentTabContainer>
         <TransactionContainer>
-          {transactionList.map((transaction) => (
+          {transactionList.map((transaction, index) => (
             <CardSensor
-              key={transaction.name}
+              key={transaction.name+index}
               {...transaction}
               latestTransaction={latestTransaction}
             />
           ))}
         </TransactionContainer>
         <DetailDeviceContainer>
-          {detailList.map((detail) => (
-            <DetailContent key={detail.name}>
+          {detailList.map((detail, index) => (
+            <DetailContent key={detail.name+index}>
               <LabelIcon>
                 {detail.icon}
                 <p>{detail.label}</p>
@@ -177,9 +177,9 @@ const DeviceContent: React.FC<DeviceContentPropsType> = ({
             {device.mode === DeviceMode.AUTO && (
               <DisableComponent title={"ต้องเปิดโหมด Manual"} />
             )}
-            {relayList.map((relay) => (
+            {relayList.map((relay, index) => (
               <CheckboxToggle
-                key={relay.name}
+                key={relay.name+index}
                 label={relay.label}
                 labelAlignment="top"
                 disabled={relay.state}

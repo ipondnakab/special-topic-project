@@ -8,24 +8,29 @@ import {
   updateSchedule,
 } from "../../apis/schedules";
 
-export const deviceContext = React.createContext<
+export const scheduleContext = React.createContext<
   ReturnType<typeof useSchedule>
 >({} as ReturnType<typeof useSchedule>);
 
-export const useScheduleContext = () => React.useContext(deviceContext);
+export const useScheduleContext = () => React.useContext(scheduleContext);
 
 function useSchedule() {
-  const [deviceId, setDeviceId] = React.useState<string>("1");
+  const [deviceId, setDeviceId] = React.useState<string>();
   const [schedule, setSchedule] = React.useState<Schedule[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const getAllSchedule = React.useCallback(async () => {
+    setIsLoading(true);
+    if (!deviceId) return
     try {
       const response = await getScheduleByDeviceId(deviceId);
+      console.log({response});
       if (!response) return;
       setSchedule(response);
     } catch (error) {
       console.log({ error });
+    } finally {
+      setIsLoading(false);
     }
   }, [deviceId]);
 
@@ -35,9 +40,9 @@ function useSchedule() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
+      // setIsLoading(true);
       await getAllSchedule();
-      setIsLoading(false);
+      // setIsLoading(false);
     };
     fetchData();
   }, [getAllSchedule]);
@@ -70,7 +75,7 @@ function useSchedule() {
       >
     >
   ) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       if (!data.id) return;
       await updateSchedule(data.id.toString(), data);
@@ -78,7 +83,7 @@ function useSchedule() {
     } catch (error) {
       console.log({ error });
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 

@@ -13,7 +13,7 @@ import {
 } from "./index.style";
 import { transactionList } from "../index.config";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import useSchedule from "../../../pages/devices/useSchedule";
+import {useScheduleContext} from "../../../pages/devices/useSchedule";
 
 export type ScheduleContentPropsType = {
   device: Device;
@@ -36,14 +36,11 @@ const ScheduleContent: React.FC<ScheduleContentPropsType> = ({
   setModalCreate,
   openEditModalSchedule,
 }) => {
-  const customHookSchedule = useSchedule();
-  const { schedule, setValueDeviceId, onDeleteSchedule, isLoading } = customHookSchedule;
+  const { schedule, setValueDeviceId, onDeleteSchedule, isLoading } = useScheduleContext();
 
   React.useEffect(() => {
     setValueDeviceId(device.id);
   }, [device, setValueDeviceId]);
-
-  React.useEffect(() => {}, [schedule]);
 
   return isLoading ? (
     <Spinner />

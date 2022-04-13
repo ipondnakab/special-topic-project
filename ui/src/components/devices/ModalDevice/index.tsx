@@ -124,9 +124,9 @@ const ModalDevice: React.FC<ModalPropsType> = ({
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Header extraLeft={iconModal} title={titleModal} />
         <ContentInput>
-          {inputs.map((item) => (
+          {inputs.map((item, index) => (
             <Input
-              key={item.name}
+              key={item.name+index}
               icon={item.icon}
               label={item.label}
               labelAlignment="left"
