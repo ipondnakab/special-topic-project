@@ -21,10 +21,9 @@ function useSchedule() {
 
   const getAllSchedule = React.useCallback(async () => {
     setIsLoading(true);
-    if (!deviceId) return
+    if (!deviceId) return;
     try {
       const response = await getScheduleByDeviceId(deviceId);
-      console.log({response});
       if (!response) return;
       setSchedule(response);
     } catch (error) {

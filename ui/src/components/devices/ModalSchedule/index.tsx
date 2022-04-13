@@ -110,10 +110,6 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
     }
   }, [deviceId, scheduleType, setValue, value]);
 
-  useEffect(() => {
-    console.log(watch("activeRelay"));
-  }, [watch]);
-
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -121,7 +117,7 @@ const ModalSchedule: React.FC<ModalPropsType> = ({
         <ContentInput>
           <div>
             <RadioGroup
-            id="typeRadio"
+              id="typeRadio"
               options={optionsType}
               value={scheduleType}
               onChange={(e) => {
