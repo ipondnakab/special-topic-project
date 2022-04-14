@@ -3,14 +3,14 @@ import { Sidebar, SidebarItem } from "react-rainbow-components";
 import { useNavigate } from "react-router-dom";
 import { FcMultipleDevices, FcConferenceCall, FcReading } from "react-icons/fc";
 import styled from "styled-components";
-// import logoSmartFarm from "../logo/logoSmartFarm.png";
+import logoSmartFarm from "../logo/logo.png";
 
 const MockupIcon = styled.div`
   height: 60px;
   width: 80%;
   border-radius: 4px;
   margin: 8px auto;
-  background-color: #e1ece2;
+  // background-color: #f0f0f0;
   display: flex;
   color: #555;
   justify-content: center;
@@ -31,7 +31,9 @@ const SideBar: React.FC = () => {
       onSelect={(_, page) => setSelectItem(page)}
       id="sidebar-1"
     >
-      <MockupIcon>ICON</MockupIcon>
+      <MockupIcon>
+        <img src={logoSmartFarm} alt="smart-farm-logo" />
+      </MockupIcon>
       <SidebarItem
         icon={<FcMultipleDevices size={80} />}
         name="devices"
