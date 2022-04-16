@@ -1,5 +1,3 @@
-import { Value } from "react-rainbow-components/components/DatePicker";
-
 export enum ScheduleType {
   WEEKLY = "WEEKLY",
   SENSOR = "SENSOR",

@@ -1,7 +1,7 @@
 {
-  "dependencies": {
-    "dayjs": "^1.11.0",
-    "react-rainbow-components": "^1.29.0",
-    "sweetalert2": "^11.4.8"
+  "scripts": {
+    "ui-dev": "cd ./ui && yarn start",
+    "api-dev": "cd ./api && ./node_modules/nodemon/bin/nodemon.js",
+    "db-dev": "docker-compose  -f 'docker-compose.yaml' up -d --build db"
   }
 }
