@@ -25,14 +25,26 @@ export const Transactions = models.Transactions(sequelize);
 export const Schedules = models.Schedule(sequelize);
 
 // Sync all models that have been defined above to the database.
-Devices.sync({ force: true })
-  .then(() => Devices.bulkCreate(mockupDevices)) //Mockup data
+Devices.sync({ force: false })
+  .then(async () => {
+    const devices = await Devices.findAll();
+    if (devices.length === 0) await Devices.bulkCreate(mockupDevices);
+  }) //Mockup data
   .catch((error) => console.log({ error }));
-Transactions.sync({ force: true })
-  .then(() => Transactions.bulkCreate(mockupTransactions)) //Mockup data
+
+Transactions.sync({ force: false })
+  .then(async () => {
+    const transactions = await Transactions.findAll();
+    if (transactions.length === 0)
+      await Transactions.bulkCreate(mockupTransactions);
+  }) //Mockup data
   .catch((error) => console.log({ error }));
-Schedules.sync({ force: true })
-  .then(() => Schedules.bulkCreate(mockupSchedule)) //Mockup data
+
+Schedules.sync({ force: false })
+  .then(async () => {
+    const schedules = await Schedules.findAll();
+    if (schedules.length === 0) await Schedules.bulkCreate(mockupSchedule);
+  }) //Mockup data
   .catch((error) => console.log({ error }));
 
 export const connection = async () => sequelize.authenticate();

@@ -52,6 +52,8 @@ services:
       - api
     stdin_open: true
     tty: true
+    environment:
+      REACT_APP_API_URL: http://api:3080
 
 networks:
   backend_network:
