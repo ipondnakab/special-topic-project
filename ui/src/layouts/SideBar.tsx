@@ -47,7 +47,7 @@ const SideBar: React.FC = () => {
       <SidebarItem
         icon={<FcReading size={80} />}
         name="manuals"
-        label="คู่มือการใช้งาน"
+        label="รายงาน"
       />
     </Sidebar>
   );

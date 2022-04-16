@@ -27,7 +27,7 @@ const Content = styled.div`
 const Manuals: React.FC = () => {
   return (
     <Container>
-      <Header title="คู่มือการใช้งาน" />
+      <Header title="รายงาน" />
       <Content>
         <ImageGallery thumbnailPosition="left" items={images} />
       </Content>
