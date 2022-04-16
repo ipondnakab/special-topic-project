@@ -1,5 +1,5 @@
 # การเริ่มต้นใช้งาน
-รันคำสั่งต่อไปนี้เพื่อทำกาน Build และเปิด Container
+รันคำสั่งต่อไปนี้เพื่อทำการ Build และเปิด Container
 ```
 $ docker-compose -f "docker-compose.yaml" up -d --build
 ```
