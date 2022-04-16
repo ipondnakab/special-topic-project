@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 import ImageGallery from "react-image-gallery";
 import styled from "styled-components";
 
-const numberPage = 15;
+const numberPage = 26;
 const images = Array(numberPage)
   .fill(0)
   .map((_, index) => {
@@ -14,7 +14,11 @@ const images = Array(numberPage)
   });
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
+const Content = styled.div`
   border-radius: 16px;
   align-self: center;
   margin-top: 16px;
@@ -22,12 +26,12 @@ const Container = styled.div`
 
 const Manuals: React.FC = () => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <Container>
       <Header title="คู่มือการใช้งาน" />
-      <Container>
+      <Content>
         <ImageGallery thumbnailPosition="left" items={images} />
-      </Container>
-    </div>
+      </Content>
+    </Container>
   );
 };
 
