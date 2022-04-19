@@ -22,7 +22,7 @@ const sequelize = new Sequelize.Sequelize(
 // Initialize models
 export const Devices = models.Devices(sequelize);
 export const Transactions = models.Transactions(sequelize);
-export const Schedules = models.Schedule(sequelize);
+export const Schedules = models.Schedules(sequelize);
 
 // Sync all models that have been defined above to the database.
 Devices.sync({ force: false })
