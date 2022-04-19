@@ -31,3 +31,13 @@ button.swal2-styled {
 .swal2-actions {
   flex-direction: row-reverse;
 }
+
+.image-gallery-thumbnails {
+  overflow-y: scroll !important;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+}
+
+.image-gallery-thumbnails::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}

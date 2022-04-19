@@ -1,6 +1,6 @@
 import * as http from "http";
-import app from "./app";
-import * as database from "./database";
+import app from "./src/app";
+import * as database from "./src/database";
 require("dotenv").config();
 
 const port = process.env.PORT || 3080;

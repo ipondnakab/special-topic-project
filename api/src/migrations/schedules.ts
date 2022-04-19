@@ -1,4 +1,4 @@
-import { ScheduleType } from "../models/Schedule";
+import { ScheduleType } from "../models/Schedules";
 
 const mockSchedule = [
   {

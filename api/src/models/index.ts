@@ -1,5 +1,5 @@
 import Devices from "./Devices";
 import Transactions from "./Transactions";
-import Schedule from "./Schedule";
+import Schedules from "./Schedules";
 
-export default { Devices, Transactions, Schedule };
+export default { Devices, Transactions, Schedules };
